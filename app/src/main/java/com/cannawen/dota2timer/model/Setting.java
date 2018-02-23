@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Setting {
+class Setting {
     static int NO_EXPIRY = 0;
 
     String name = "";

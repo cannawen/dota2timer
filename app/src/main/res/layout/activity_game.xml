@@ -1,37 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical"
     tools:context="com.cannawen.dota2timer.activity.GameActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/game_not_started_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_gravity="center"
+        android:onClick="startGame"
+        android:text="@string/game_action_start"
+        tools:visibility="invisible" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_started_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/time_hours_text"
+                style="@style/GameTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="00" />
+
+            <TextView
+                style="@style/GameTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/game_time_separator" />
+
+            <TextView
+                android:id="@+id/time_minutes_text"
+                style="@style/GameTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="00" />
+
+            <TextView
+                style="@style/GameTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/game_time_separator" />
+
+            <TextView
+                android:id="@+id/time_seconds_text"
+                style="@style/GameTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="00" />
+
+        </LinearLayout>
 
         <Button
+            android:id="@+id/play_pause_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="startGame"
-            android:text="Start Game" />
+            android:onClick="playOrPauseGame"
+            android:text="@string/game_action_pause"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/header_time_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textSize="30sp"
-            tools:text="00:00:00" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="pauseGame"
-            android:text="Pause Game" />
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

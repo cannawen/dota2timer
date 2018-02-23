@@ -52,4 +52,12 @@ public class Game {
         }
         timer = null;
     }
+
+    public boolean isPaused() {
+        return timer == null;
+    }
+
+    public void resume() {
+        start();
+    }
 }

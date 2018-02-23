@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Dota2timer</string>
+    <string name="game_action_pause">Pause Game</string>
+    <string name="game_action_resume">Resume Game</string>
+    <string name="game_action_start">Start Game</string>
+    <string name="game_time_separator">:</string>
 </resources>
