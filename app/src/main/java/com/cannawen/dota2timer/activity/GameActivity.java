@@ -1,10 +1,14 @@
-package com.cannawen.dota2timer;
+package com.cannawen.dota2timer.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.TextView;
+
+import com.cannawen.dota2timer.model.Game;
+import com.cannawen.dota2timer.model.GameDisplayer;
+import com.cannawen.dota2timer.R;
 
 import java.io.IOException;
 

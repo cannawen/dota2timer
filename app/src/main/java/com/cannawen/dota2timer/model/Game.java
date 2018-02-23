@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer;
+package com.cannawen.dota2timer.model;
 
 import android.content.Context;
 import android.util.Log;

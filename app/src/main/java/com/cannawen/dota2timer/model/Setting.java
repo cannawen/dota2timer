@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer;
+package com.cannawen.dota2timer.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

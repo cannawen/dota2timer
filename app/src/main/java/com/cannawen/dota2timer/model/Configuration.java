@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer;
+package com.cannawen.dota2timer.model;
 
 import java.util.List;
 
