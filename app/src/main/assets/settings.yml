@@ -1,4 +1,4 @@
-settings:
+events:
   - name: "Runes"
     time_initial: 120
     time_repeat: 120

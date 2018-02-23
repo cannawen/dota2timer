@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 class Configuration {
-    List<Setting> settings;
+    List<Event> events;
 }

@@ -35,9 +35,9 @@ public class Game {
                 public void run() {
                     displayer.timeUpdated(secondsElapsed);
 
-                    for (Setting setting : config.getSettings()) {
-                        if (setting.triggeredAt(secondsElapsed)) {
-                            displayer.warn(setting.getName());
+                    for (Event event : config.getEvents()) {
+                        if (event.triggeredAt(secondsElapsed)) {
+                            displayer.warn(event.getName());
                         }
                     }
                     secondsElapsed++;

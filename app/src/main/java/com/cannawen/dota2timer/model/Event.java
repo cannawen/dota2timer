@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class Setting {
+class Event {
     static int NO_EXPIRY = 0;
 
     @Builder.Default
