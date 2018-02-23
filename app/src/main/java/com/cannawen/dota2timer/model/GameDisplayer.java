@@ -1,7 +1,7 @@
 package com.cannawen.dota2timer.model;
 
 public interface GameDisplayer {
-    void timeUpdated(int totalSecondsElapsed);
+    void showTime(int secondsElapsed);
 
-    void warn(String warning);
+    void notify(String eventString);
 }

@@ -33,11 +33,11 @@ public class Game {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    displayer.timeUpdated(secondsElapsed);
+                    displayer.showTime(secondsElapsed);
 
                     for (Event event : config.getEvents()) {
                         if (event.triggeredAt(secondsElapsed)) {
-                            displayer.warn(event.getName());
+                            displayer.notify(event.getName());
                         }
                     }
                     secondsElapsed++;
@@ -67,11 +67,11 @@ public class Game {
 
     public void increaseTime() {
         secondsElapsed++;
-        displayer.timeUpdated(secondsElapsed);
+        displayer.showTime(secondsElapsed);
     }
 
     public void decreaseTime() {
         secondsElapsed--;
-        displayer.timeUpdated(secondsElapsed);
+        displayer.showTime(secondsElapsed);
     }
 }

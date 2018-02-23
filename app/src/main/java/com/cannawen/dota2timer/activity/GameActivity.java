@@ -94,10 +94,10 @@ public class GameActivity extends Activity {
     class MainGameDisplayer implements GameDisplayer {
         @Override
         @SuppressLint("DefaultLocale")
-        public void timeUpdated(int totalSecondsElapsed) {
-            int hours = totalSecondsElapsed / 3600;
-            final int minutes = (totalSecondsElapsed % 3600) / 60;
-            int seconds = totalSecondsElapsed % 60;
+        public void showTime(int secondsElapsed) {
+            int hours = secondsElapsed / 3600;
+            final int minutes = (secondsElapsed % 3600) / 60;
+            int seconds = secondsElapsed % 60;
 
             String timeSeparator = getResources().getString(R.string.game_time_separator);
             final String timeString = String.format("%02d%s%02d%s%02d", hours, timeSeparator, minutes, timeSeparator, seconds);
@@ -111,8 +111,8 @@ public class GameActivity extends Activity {
         }
 
         @Override
-        public void warn(String warning) {
-            tts.speak(warning, QUEUE_ADD, null, warning);
+        public void notify(String eventString) {
+            tts.speak(eventString, QUEUE_ADD, null, eventString);
         }
     }
 }
