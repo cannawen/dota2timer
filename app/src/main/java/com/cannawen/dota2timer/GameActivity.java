@@ -9,9 +9,8 @@ import android.widget.TextView;
 import java.io.IOException;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
-import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
-public class MainActivity extends Activity {
+public class GameActivity extends Activity {
 
     private Game game;
     private TextToSpeech tts;
@@ -19,7 +18,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game);
         try {
             game = new Game(getApplicationContext(), new MainGameDisplayer());
         } catch (IOException e) {
