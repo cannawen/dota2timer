@@ -12,3 +12,7 @@ settings:
     time_expire: 600
     time_repeat: 30
     time_advance_notice: 10
+  - name: "Tome"
+    time_initial: 600
+    time_repeat: 600
+    time_expire: 3600
