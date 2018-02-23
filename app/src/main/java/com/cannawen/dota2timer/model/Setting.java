@@ -12,10 +12,15 @@ import lombok.NoArgsConstructor;
 class Setting {
     static int NO_EXPIRY = 0;
 
+    @Builder.Default
     String name = "";
+    @Builder.Default
     int time_initial = 0;
+    @Builder.Default
     int time_repeat = 0;
+    @Builder.Default
     int time_advance_notice = 0;
+    @Builder.Default
     int time_expire = NO_EXPIRY;
 
     public boolean triggeredAt(int secondsElapsed) {
