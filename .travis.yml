@@ -1,0 +1,32 @@
+language: android
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
+    # The BuildTools version used by your project
+    - build-tools-26.0.2
+
+    # The SDK version used to compile your project
+    - android-26
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+script:
+  - ./gradlew assembleDebug
+  - >
+    curl
+    -F "status=2"
+    -F "notify=0"
+    -F "notes=$TRAVIS_COMMIT_MESSAGE"
+    -F "notes_type=0"
+    -F "commit_sha=$TRAVIS_COMMIT"
+    -F "ipa=@app/build/outputs/apk/debug/app-debug.apk"
+    -H "X-HockeyAppToken: $HOCKEYAPP_TOKEN"
+    https://rink.hockeyapp.net/api/2/apps/upload
