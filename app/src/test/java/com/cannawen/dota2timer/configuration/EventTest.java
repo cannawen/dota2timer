@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.model;
+package com.cannawen.dota2timer.configuration;
 
 import org.junit.Test;
 

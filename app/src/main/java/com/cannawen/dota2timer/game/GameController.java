@@ -1,7 +1,10 @@
-package com.cannawen.dota2timer.model;
+package com.cannawen.dota2timer.game;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.Event;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,17 +13,17 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Game {
+public class GameController {
 
     private GameDisplayer displayer;
     private int secondsElapsed;
     private Timer timer;
     private Configuration config;
 
-    public Game(Context context, GameDisplayer gameDisplayer) throws IOException {
+    public GameController(Context context, GameDisplayer gameDisplayer) throws IOException {
         displayer = gameDisplayer;
         secondsElapsed = 0;
-        InputStream inputStream = context.getAssets().open("settings.yml");
+        InputStream inputStream = context.getAssets().open("configuration.yml");
 
         Yaml yaml = new Yaml();
         config = yaml.loadAs(inputStream, Configuration.class);

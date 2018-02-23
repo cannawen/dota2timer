@@ -1,10 +1,10 @@
-package com.cannawen.dota2timer.model;
+package com.cannawen.dota2timer.configuration;
 
 import java.util.List;
 
 import lombok.Data;
 
 @Data
-class Configuration {
+public class Configuration {
     List<Event> events;
 }

@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.model;
+package com.cannawen.dota2timer.game;
 
 public interface GameDisplayer {
     void showTime(int secondsElapsed);

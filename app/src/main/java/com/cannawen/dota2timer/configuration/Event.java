@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.model;
+package com.cannawen.dota2timer.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class Event {
+public class Event {
     static int NO_EXPIRY = 0;
 
     @Builder.Default

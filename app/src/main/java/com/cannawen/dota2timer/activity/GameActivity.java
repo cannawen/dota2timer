@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.model.Game;
-import com.cannawen.dota2timer.model.GameDisplayer;
+import com.cannawen.dota2timer.game.GameController;
+import com.cannawen.dota2timer.game.GameDisplayer;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
 
-    private Game game;
+    private GameController gameController;
     private TextToSpeech tts;
 
     @Override
@@ -33,35 +33,35 @@ public class GameActivity extends Activity {
 
     public void startGame(View view) {
         createNewGame();
-        game.start();
+        gameController.start();
         findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
         findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
     }
 
     public void stopGame() {
-        game.stop();
-        game = null;
+        gameController.stop();
+        gameController = null;
         findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
         findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
     }
 
     public void playOrPauseGame(View view) {
         Button button = findViewById(R.id.play_pause_button);
-        if (game.isPaused()) {
-            game.resume();
+        if (gameController.isPaused()) {
+            gameController.resume();
             button.setText(R.string.game_action_pause);
         } else {
-            game.pause();
+            gameController.pause();
             button.setText(R.string.game_action_resume);
         }
     }
 
     public void increaseTime(View view) {
-        game.increaseTime();
+        gameController.increaseTime();
     }
 
     public void decreaseTime(View view) {
-        game.decreaseTime();
+        gameController.decreaseTime();
     }
 
     public void resetGame(View view) {
@@ -85,7 +85,7 @@ public class GameActivity extends Activity {
 
     private void createNewGame() {
         try {
-            game = new Game(getApplicationContext(), new MainGameDisplayer());
+            gameController = new GameController(getApplicationContext(), new MainGameDisplayer());
         } catch (IOException e) {
             e.printStackTrace();
         }

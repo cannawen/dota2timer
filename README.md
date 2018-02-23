@@ -6,7 +6,7 @@ Dota 2 coaching app on Android, to remind you of game timings (runes, etc)
 
 ## Configuration
 
-See [events.yml](app/src/main/assets/events.yml)
+See [configuration.yml](app/src/main/assets/configuration.yml)
 ```yaml
 events:
   - name: "Runes"
