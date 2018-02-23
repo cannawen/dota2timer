@@ -6,6 +6,9 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
 public class MainActivity extends Activity {
@@ -17,7 +20,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        game = new Game(new MainGameDisplayer());
+        try {
+            game = new Game(getApplicationContext(), new MainGameDisplayer());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         tts = new TextToSpeech(getApplicationContext(), null);
     }
 
@@ -47,8 +54,8 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        public void runes() {
-            tts.speak("runes", QUEUE_FLUSH, null, "runes");
+        public void warn(String warning) {
+            tts.speak(warning, QUEUE_ADD, null, warning);
         }
     }
 }

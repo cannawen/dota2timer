@@ -1,5 +1,12 @@
 package com.cannawen.dota2timer;
 
+import android.content.Context;
+import android.util.Log;
+
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,10 +15,16 @@ public class Game {
     private GameDisplayer displayer;
     private int secondsElapsed;
     private Timer timer;
+    private Configuration config;
 
-    public Game(GameDisplayer gameDisplayer) {
+    public Game(Context context, GameDisplayer gameDisplayer) throws IOException {
         displayer = gameDisplayer;
         secondsElapsed = 0;
+        InputStream inputStream = context.getAssets().open("settings.yml");
+
+        Yaml yaml = new Yaml();
+        config = yaml.loadAs(inputStream, Configuration.class);
+        Log.d("", config.toString());
     }
 
     public void start() {
@@ -21,8 +34,11 @@ public class Game {
                 @Override
                 public void run() {
                     displayer.timeUpdated(secondsElapsed);
-                    if (secondsElapsed % 120 == (120 - 10)) {
-                        displayer.runes();
+
+                    for (Setting setting : config.getSettings()) {
+                        if (setting.triggeredAt(secondsElapsed)) {
+                            displayer.warn(setting.getName());
+                        }
                     }
                     secondsElapsed++;
                 }

@@ -1,0 +1,13 @@
+settings:
+  - name: "Runes"
+    time_repeat: 120
+    time_advance_notice: 10
+  - name: "Stack"
+    time_initial: 113
+    time_repeat: 60
+    time_advance_notice: 10
+  - name: "Pull"
+    time_initial: 71
+    time_expire: 600
+    time_repeat: 30
+    time_advance_notice: 10
