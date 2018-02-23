@@ -30,3 +30,11 @@ script:
     -F "ipa=@app/build/outputs/apk/debug/app-debug.apk"
     -H "X-HockeyAppToken: $HOCKEYAPP_TOKEN"
     https://rink.hockeyapp.net/api/2/apps/upload
+deploy:
+  provider: releases
+  user: $GITHUB_USERNAME
+  password: $GITHUB_PASSWORD
+  file: "app/build/outputs/apk/debug/app-debug.apk"
+  skip_cleanup: true
+  on:
+    tags: true
