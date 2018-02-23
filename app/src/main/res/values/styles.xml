@@ -5,6 +5,6 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="GameTimeText">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">80sp</item>
     </style>
 </resources>

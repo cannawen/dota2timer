@@ -50,6 +50,13 @@ public class GameActivity extends Activity {
         }
     }
 
+    public void increaseTime(View view) {
+        game.increaseTime();
+    }
+
+    public void decreaseTime(View view) {
+        game.decreaseTime();
+    }
 
     class MainGameDisplayer implements GameDisplayer {
         @Override
@@ -59,16 +66,12 @@ public class GameActivity extends Activity {
             final int minutes = (totalSecondsElapsed % 3600) / 60;
             int seconds = totalSecondsElapsed % 60;
 
-            final String hoursString = String.format("%02d", hours);
-            final String minutesString = String.format("%02d", minutes);
-            final String secondsString = String.format("%02d", seconds);
+            final String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((TextView) findViewById(R.id.time_hours_text)).setText(hoursString);
-                    ((TextView) findViewById(R.id.time_minutes_text)).setText(minutesString);
-                    ((TextView) findViewById(R.id.time_seconds_text)).setText(secondsString);
+                    ((TextView) findViewById(R.id.time_text)).setText(timeString);
                 }
             });
         }

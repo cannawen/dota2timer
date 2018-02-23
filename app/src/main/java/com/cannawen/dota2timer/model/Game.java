@@ -60,4 +60,14 @@ public class Game {
     public void resume() {
         start();
     }
+
+    public void increaseTime() {
+        secondsElapsed++;
+        displayer.timeUpdated(secondsElapsed);
+    }
+
+    public void decreaseTime() {
+        secondsElapsed--;
+        displayer.timeUpdated(secondsElapsed);
+    }
 }
