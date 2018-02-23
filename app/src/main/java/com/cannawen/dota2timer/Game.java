@@ -21,6 +21,9 @@ public class Game {
                 @Override
                 public void run() {
                     displayer.timeUpdated(secondsElapsed);
+                    if (secondsElapsed % 120 == (120 - 10)) {
+                        displayer.runes();
+                    }
                     secondsElapsed++;
                 }
             }, 0, 1000);
