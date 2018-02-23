@@ -32,8 +32,7 @@ script:
     https://rink.hockeyapp.net/api/2/apps/upload
 deploy:
   provider: releases
-  user: $GITHUB_USERNAME
-  password: $GITHUB_PASSWORD
+  api_key: $GITHUB_OAUTH_TOKEN
   file: "app/build/outputs/apk/debug/app-debug.apk"
   skip_cleanup: true
   on:
