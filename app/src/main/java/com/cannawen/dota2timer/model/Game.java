@@ -46,6 +46,10 @@ public class Game {
         }
     }
 
+    public void stop() {
+        pause();
+    }
+
     public void pause() {
         if (timer != null) {
             timer.cancel();
