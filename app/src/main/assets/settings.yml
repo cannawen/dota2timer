@@ -1,5 +1,6 @@
 settings:
   - name: "Runes"
+    time_initial: 120
     time_repeat: 120
     time_advance_notice: 10
   - name: "Stack"
