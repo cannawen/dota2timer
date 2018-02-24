@@ -96,12 +96,18 @@ public class GameActivity extends Activity {
         @Override
         @SuppressLint("DefaultLocale")
         public void showTime(int secondsElapsed) {
+            String signString = "";
+            if (secondsElapsed < 0) {
+                signString = "-";
+                secondsElapsed = secondsElapsed * -1;
+            }
+
             int hours = secondsElapsed / 3600;
             final int minutes = (secondsElapsed % 3600) / 60;
             int seconds = secondsElapsed % 60;
 
             String timeSeparator = getResources().getString(R.string.game_time_separator);
-            final String timeString = String.format("%02d%s%02d%s%02d", hours, timeSeparator, minutes, timeSeparator, seconds);
+            final String timeString = String.format("%s%02d%s%02d%s%02d", signString, hours, timeSeparator, minutes, timeSeparator, seconds);
 
             runOnUiThread(new Runnable() {
                 @Override
