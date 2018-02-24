@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cannawen/dota2timer.svg?branch=master)](https://travis-ci.org/cannawen/dota2timer) [![codecov](https://codecov.io/gh/cannawen/dota2timer/branch/master/graph/badge.svg)](https://codecov.io/gh/cannawen/dota2timer)
+[![Build Status](https://travis-ci.org/cannawen/dota2timer.svg?branch=master)](https://travis-ci.org/cannawen/dota2timer) [![codecov](https://codecov.io/gh/cannawen/dota2timer/branch/master/graph/badge.svg)](https://codecov.io/gh/cannawen/dota2timer) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://opensource.guide/how-to-contribute/)
 
 ## dota2timer
 
