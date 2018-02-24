@@ -20,7 +20,7 @@ events:
     time_repeat: 30
     time_advance_notice: 10
     enabled: false
-    ...
+  ...
 ```
 Each event is described:
 
