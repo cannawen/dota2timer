@@ -1,26 +1,30 @@
 package com.cannawen.dota2timer.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.game.GameController;
-import com.cannawen.dota2timer.game.GameDisplayer;
+import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderListener;
+import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
+import com.cannawen.dota2timer.game.DotaGame;
+import com.cannawen.dota2timer.game.interfaces.Game;
 
-import java.io.IOException;
+import java.util.List;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
 
-    private GameController gameController;
+    private Game game;
+
     private TextToSpeech tts;
 
     @Override
@@ -29,43 +33,31 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         tts = new TextToSpeech(getApplicationContext(), null);
+        createNewGame();
     }
 
     public void startGame(View view) {
+        game.start();
+    }
+
+    private void stopGame() {
+        game.stop();
         createNewGame();
-        gameController.start();
-        ((TextView)findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
-        findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
-        findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
     }
 
-    public void stopGame() {
-        gameController.stop();
-        gameController = null;
-        findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
-        findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
-    }
-
-    public void playOrPauseGame(View view) {
-        Button button = findViewById(R.id.play_pause_button);
-        if (gameController.isPaused()) {
-            gameController.resume();
-            button.setText(R.string.game_action_pause);
-        } else {
-            gameController.pause();
-            button.setText(R.string.game_action_resume);
-        }
+    public void pauseOrResume(View view) {
+        game.pauseOrResume();
     }
 
     public void increaseTime(View view) {
-        gameController.increaseTime();
+        game.increaseTime();
     }
 
     public void decreaseTime(View view) {
-        gameController.decreaseTime();
+        game.decreaseTime();
     }
 
-    public void resetGame(View view) {
+    public void confirmIfShouldStopGame(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirm Reset Game?");
         alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -85,41 +77,67 @@ public class GameActivity extends Activity {
     }
 
     private void createNewGame() {
-        try {
-            gameController = new GameController(getApplicationContext(), new MainGameDisplayer());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    class MainGameDisplayer implements GameDisplayer {
-        @Override
-        @SuppressLint("DefaultLocale")
-        public void showTime(int secondsElapsed) {
-            String signString = "";
-            if (secondsElapsed < 0) {
-                signString = "-";
-                secondsElapsed = secondsElapsed * -1;
+        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
+        loader.getConfiguration(new ConfigurationLoaderListener() {
+            @Override
+            public void onSuccess(Configuration configuration) {
+                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGameDisplayer()));
             }
 
-            int hours = secondsElapsed / 3600;
-            final int minutes = (secondsElapsed % 3600) / 60;
-            int seconds = secondsElapsed % 60;
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-            String timeSeparator = getResources().getString(R.string.game_time_separator);
-            final String timeString = String.format("%s%02d%s%02d%s%02d", signString, hours, timeSeparator, minutes, timeSeparator, seconds);
-
+    private class DotaGameDisplayer implements GameActivityViewModel.GameDisplayer {
+        @Override
+        public void configurePlayingGameView(final String time, final List<String> events) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((TextView) findViewById(R.id.time_text)).setText(timeString);
+                    for (String eventString : events) {
+                        tts.speak(eventString, QUEUE_ADD, null, eventString);
+                    }
+
+                    configureStartedGameView(time, false);
                 }
             });
         }
 
         @Override
-        public void notify(String eventString) {
-            tts.speak(eventString, QUEUE_ADD, null, eventString);
+        public void configurePausedGameView(final String time) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    configureStartedGameView(time, true);
+                }
+            });
+        }
+
+        @Override
+        public void showNonStartedGame() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((TextView) findViewById(R.id.time_text)).setText("");
+                    findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
+                    ((Button) findViewById(R.id.game_not_started_view)).setText(R.string.game_action_start);
+                    findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+
+        private void configureStartedGameView(String time, boolean paused) {
+            findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+
+            findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
+
+            ((TextView) findViewById(R.id.time_text)).setText(time);
+            @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
+            ((TextView) findViewById(R.id.play_pause_button)).setText(buttonStringRes);
+            ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
         }
     }
 }
