@@ -11,11 +11,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
+import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener;
+import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGameController;
 import com.cannawen.dota2timer.game.GameController;
 import com.cannawen.dota2timer.game.GameDisplayer;
-
-import java.io.IOException;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
@@ -39,7 +40,7 @@ public class GameActivity extends Activity {
     public void startGame(View view) {
         createNewGame();
         gameController.start();
-        ((TextView)findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
+        ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
         findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
         findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
     }
@@ -90,11 +91,19 @@ public class GameActivity extends Activity {
     }
 
     private void createNewGame() {
-        try {
-            gameController = new DotaGameController(getApplicationContext(), new MainGameDisplayer());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
+        loader.getConfiguration(new ConfigurationLoaderListener() {
+            @Override
+            public void onSuccess(Configuration configuration) {
+                gameController = new DotaGameController(configuration, new MainGameDisplayer());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         syncUI();
     }
 
