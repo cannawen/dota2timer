@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.game;
+package com.cannawen.dota2timer.game.interfaces;
 
 import android.support.annotation.IntDef;
 

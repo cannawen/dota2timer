@@ -2,24 +2,28 @@ package com.cannawen.dota2timer.game;
 
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;
+import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.game.interfaces.GameState;
+import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DotaGameController implements GameController {
+public class DotaGame implements Game, GameState {
+    protected GameStateChangeListener listener;
 
-    private GameStateChangeListener displayer;
     private int secondsElapsed;
     private Timer timer;
     private Configuration config;
 
-    private @State int state;
+    private @State
+    int state;
 
-    public DotaGameController(Configuration config, GameStateChangeListener gameStateChangeListener) {
+    public DotaGame(Configuration config, GameStateChangeListener listener) {
         this.config = config;
-        this.displayer = gameStateChangeListener;
+        this.listener = listener;
 
         initializeState();
     }
@@ -27,37 +31,35 @@ public class DotaGameController implements GameController {
     @Override
     public void start() {
         state = State.PLAYING;
-        updateDisplayer();
+        triggerListener();
     }
 
     @Override
     public void stop() {
         state = State.FINISHED;
-        updateDisplayer();
+        triggerListener();
     }
 
     @Override
-    public void pause() {
-        state = State.PAUSED;
-        updateDisplayer();
-    }
-
-    @Override
-    public void resume() {
-        state = State.PLAYING;
-        updateDisplayer();
+    public void pauseOrResume() {
+        if (state == State.PAUSED) {
+            state = State.PLAYING;
+        } else if (state == State.PLAYING) {
+            state = State.PAUSED;
+        }
+        triggerListener();
     }
 
     @Override
     public void increaseTime() {
         secondsElapsed++;
-        updateDisplayer();
+        triggerListener();
     }
 
     @Override
     public void decreaseTime() {
         secondsElapsed--;
-        updateDisplayer();
+        triggerListener();
     }
 
     private void initializeState() {
@@ -73,6 +75,7 @@ public class DotaGameController implements GameController {
                 }
             }, 0, 1000);
         }
+        triggerListener();
     }
 
     private void tick() {
@@ -91,11 +94,11 @@ public class DotaGameController implements GameController {
             default:
                 break;
         }
-        updateDisplayer();
+        triggerListener();
     }
 
-    private void updateDisplayer() {
-        displayer.gameStateChanged(this);
+    private void triggerListener() {
+        listener.gameStateChanged(this);
     }
 
     @Override
