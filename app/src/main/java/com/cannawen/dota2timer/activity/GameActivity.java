@@ -3,9 +3,12 @@ package com.cannawen.dota2timer.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.StringRes;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,10 +29,6 @@ import butterknife.OnClick;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
-    private Game game;
-
-    private TextToSpeech tts;
-
     @BindView(R.id.activity_game_container_not_started)
     View gameNotStartedView;
     @BindView(R.id.activity_game_button_start)
@@ -42,6 +41,8 @@ public class GameActivity extends Activity {
     Button playPauseButton;
     @BindView(R.id.activity_game_button_end)
     Button resetButton;
+    private Game game;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,26 @@ public class GameActivity extends Activity {
 
         tts = new TextToSpeech(getApplicationContext(), null);
         createNewGame();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_game_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_game_edit_events: {
+                Intent intent = new Intent(this, EditConfigurationActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     @OnClick(R.id.activity_game_button_start)
