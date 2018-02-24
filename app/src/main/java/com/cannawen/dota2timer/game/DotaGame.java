@@ -57,15 +57,14 @@ public class DotaGame extends GameState implements Game {
         gameTime = -75;
         state = State.UNSTARTED;
 
-        if (timer == null) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    tick();
-                }
-            }, 0, 1000);
-        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                tick();
+            }
+        }, 0, 1000);
+
         triggerListener();
     }
 

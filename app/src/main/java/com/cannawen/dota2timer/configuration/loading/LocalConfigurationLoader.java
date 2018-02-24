@@ -24,6 +24,5 @@ public class LocalConfigurationLoader implements ConfigurationLoader {
         } catch (IOException e) {
             listener.onFailure(e);
         }
-
     }
 }

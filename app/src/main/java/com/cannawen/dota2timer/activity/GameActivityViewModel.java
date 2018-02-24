@@ -26,11 +26,11 @@ public class GameActivityViewModel implements GameStateChangeListener {
                     }
                 }
 
-                displayer.configurePlayingGameView(timeString(gameState.getGameTime()), eventNames);
+                displayer.configurePlayingGameView(timeString(gameState), eventNames);
                 break;
             }
             case GameState.State.PAUSED: {
-                displayer.configurePausedGameView(timeString(gameState.getGameTime()));
+                displayer.configurePausedGameView(timeString(gameState));
                 break;
             }
             case GameState.State.UNSTARTED:
@@ -42,7 +42,9 @@ public class GameActivityViewModel implements GameStateChangeListener {
         }
     }
 
-    private String timeString(int secondsElapsed) {
+    private String timeString(GameState gameState) {
+        int secondsElapsed = gameState.getGameTime();
+
         String signString = "";
         if (secondsElapsed < 0) {
             signString = "-";
@@ -50,7 +52,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
         }
 
         int hours = secondsElapsed / 3600;
-        final int minutes = (secondsElapsed % 3600) / 60;
+        int minutes = (secondsElapsed % 3600) / 60;
         int seconds = secondsElapsed % 60;
 
         return String.format("%s%02d:%02d:%02d", signString, hours, minutes, seconds);
@@ -63,5 +65,4 @@ public class GameActivityViewModel implements GameStateChangeListener {
 
         void showNonStartedGame();
     }
-
 }
