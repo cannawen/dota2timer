@@ -3,19 +3,24 @@ events:
     time_initial: 120
     time_repeat: 120
     time_advance_notice: 7
+    enabled: true
   - name: "Stack"
     time_initial: 113
     time_repeat: 60
     time_advance_notice: 7
+    enabled: true
   - name: "Pull"
     time_initial: 71
     time_expire: 600
     time_repeat: 30
     time_advance_notice: 7
+    enabled: false
   - name: "Ward"
     time_initial: 150
     time_repeat: 150
+    enabled: false
   - name: "Tome"
     time_initial: 600
     time_repeat: 600
     time_expire: 3600
+    enabled: true

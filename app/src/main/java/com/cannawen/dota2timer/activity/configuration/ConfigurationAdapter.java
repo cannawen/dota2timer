@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
@@ -30,7 +31,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
     @Override
     public void onBindViewHolder(ConfigurationViewHolder holder, int position) {
-        holder.configureWithEvent(configuration.getEvents().get(position));
+        holder.configureWithEvent(configuration.getEvents().get(position), position);
     }
 
     @Override
@@ -49,9 +50,17 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
             ButterKnife.bind(this, itemView);
         }
 
-        void configureWithEvent(Event event) {
+        void configureWithEvent(Event event, int position) {
             descriptionText.setText(event.getName());
-            enabledCheckBox.setChecked(true);
+            enabledCheckBox.setChecked(event.isEnabled());
+            enabledCheckBox.setTag(position);
+            enabledCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int index = (int) buttonView.getTag();
+                    configuration.getEvents().get(index).setEnabled(isChecked);
+                }
+            });
         }
     }
 }

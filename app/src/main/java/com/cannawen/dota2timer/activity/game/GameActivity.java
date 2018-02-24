@@ -56,7 +56,20 @@ public class GameActivity extends Activity {
         ButterKnife.bind(this);
 
         tts = new TextToSpeech(getApplicationContext(), null);
-        createNewGame();
+
+        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
+        loader.getConfiguration(new ConfigurationLoaderListener() {
+            @Override
+            public void onSuccess(Configuration configuration) {
+                GameActivity.this.configuration = configuration;
+                createNewGame(configuration);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -98,7 +111,7 @@ public class GameActivity extends Activity {
 
     private void endGame() {
         game.end();
-        createNewGame();
+        createNewGame(configuration);
     }
 
     @OnClick(R.id.activity_game_button_play_or_pause)
@@ -136,21 +149,8 @@ public class GameActivity extends Activity {
         alert.show();
     }
 
-    private void createNewGame() {
-        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
-        loader.getConfiguration(new ConfigurationLoaderListener() {
-
-            @Override
-            public void onSuccess(Configuration configuration) {
-                GameActivity.this.configuration = configuration;
-                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                e.printStackTrace();
-            }
-        });
+    private void createNewGame(Configuration configuration) {
+        game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
     }
 
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {

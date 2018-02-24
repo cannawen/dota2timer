@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
@@ -18,6 +17,10 @@ import butterknife.OnClick;
 public class ConfigurationActivity extends Activity {
 
     private static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
+
+    @BindView(R.id.activity_configuration_recycler_view)
+    RecyclerView recyclerView;
+
     private Configuration configuration;
 
     static public Intent createActivityIntent(Context context, Configuration configuration) {
@@ -29,9 +32,6 @@ public class ConfigurationActivity extends Activity {
     static public Configuration deserializeConfigurationFromIntent(Intent intent) {
         return (Configuration) intent.getSerializableExtra(INTENT_CONFIGURATION_KEY);
     }
-
-    @BindView(R.id.activity_configuration_recycler_view)
-    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
