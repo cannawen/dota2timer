@@ -20,59 +20,72 @@ public class DotaGameController implements GameController {
     private Timer timer;
     private Configuration config;
 
-    private @State int state;
+    private @State
+    int state;
 
     public DotaGameController(Context context, GameDisplayer gameDisplayer) throws IOException {
         displayer = gameDisplayer;
         secondsElapsed = -75;
+
         InputStream inputStream = context.getAssets().open("configuration.yml");
 
-        Yaml yaml = new Yaml();
-        config = yaml.loadAs(inputStream, Configuration.class);
-        Log.d("", config.toString());
+        config = new Yaml().loadAs(inputStream, Configuration.class);
 
         state = State.UNSTARTED;
-    }
 
-    @Override
-    public void start() {
-        state = State.PLAYING;
         if (timer == null) {
             timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    displayer.showTime(secondsElapsed);
-
-                    for (Event event : config.getEvents()) {
-                        if (event.triggeredAt(secondsElapsed)) {
-                            displayer.notify(event.getName());
-                        }
-                    }
-                    secondsElapsed++;
+                        tick();
                 }
             }, 0, 1000);
         }
     }
 
+    private void tick() {
+        switch (state) {
+            case State.PLAYING: {
+                secondsElapsed++;
+                displayer.showTime(secondsElapsed);
+
+                for (Event event : config.getEvents()) {
+                    if (event.triggeredAt(secondsElapsed)) {
+                        displayer.notify(event.getName());
+                    }
+                }
+                break;
+            }
+            case State.FINISHED: {
+                timer.cancel();
+                timer = null;
+                break;
+            }
+            case State.PAUSED:
+            case State.UNSTARTED:
+            default:
+        }
+    }
+
+    @Override
+    public void start() {
+        state = State.PLAYING;
+    }
+
     @Override
     public void stop() {
-        pause();
         state = State.FINISHED;
     }
 
     @Override
     public void pause() {
         state = State.PAUSED;
-        if (timer != null) {
-            timer.cancel();
-        }
-        timer = null;
     }
 
     @Override
     public void resume() {
-        start();
+        state = State.PLAYING;
     }
 
     @Override
@@ -88,7 +101,8 @@ public class DotaGameController implements GameController {
     }
 
     @Override
-    public @State int getState() {
+    public @State
+    int getState() {
         return state;
     }
 }
