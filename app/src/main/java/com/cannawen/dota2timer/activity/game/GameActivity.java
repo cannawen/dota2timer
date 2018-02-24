@@ -1,16 +1,20 @@
-package com.cannawen.dota2timer.activity;
+package com.cannawen.dota2timer.activity.game;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.StringRes;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
+import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
@@ -26,9 +30,7 @@ import butterknife.OnClick;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
-    private Game game;
-
-    private TextToSpeech tts;
+    private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
 
     @BindView(R.id.activity_game_container_not_started)
     View gameNotStartedView;
@@ -43,6 +45,10 @@ public class GameActivity extends Activity {
     @BindView(R.id.activity_game_button_end)
     Button resetButton;
 
+    private Game game;
+    private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
+    private TextToSpeech tts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +56,52 @@ public class GameActivity extends Activity {
         ButterKnife.bind(this);
 
         tts = new TextToSpeech(getApplicationContext(), null);
-        createNewGame();
+
+        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
+        loader.getConfiguration(new ConfigurationLoaderListener() {
+            @Override
+            public void onSuccess(Configuration configuration) {
+                GameActivity.this.configuration = configuration;
+                createNewGame(configuration);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_game_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_game_edit_events: {
+                Intent intent = ConfigurationActivity.createActivityIntent(this, configuration);
+                startActivityForResult(intent, EDIT_CONFIGURATION_ACTIVITY_RESULT);
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
+            configuration = ConfigurationActivity.deserializeConfigurationFromIntent(data);
+            game.setConfiguration(configuration);
+        }
     }
 
     @OnClick(R.id.activity_game_button_start)
@@ -60,7 +111,7 @@ public class GameActivity extends Activity {
 
     private void endGame() {
         game.end();
-        createNewGame();
+        createNewGame(configuration);
     }
 
     @OnClick(R.id.activity_game_button_play_or_pause)
@@ -98,19 +149,8 @@ public class GameActivity extends Activity {
         alert.show();
     }
 
-    private void createNewGame() {
-        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
-        loader.getConfiguration(new ConfigurationLoaderListener() {
-            @Override
-            public void onSuccess(Configuration configuration) {
-                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                e.printStackTrace();
-            }
-        });
+    private void createNewGame(Configuration configuration) {
+        game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
     }
 
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {

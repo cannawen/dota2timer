@@ -7,7 +7,7 @@
     android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical"
-    tools:context="com.cannawen.dota2timer.activity.GameActivity">
+    tools:context="com.cannawen.dota2timer.activity.game.GameActivity">
 
     <FrameLayout
         android:id="@+id/activity_game_container_not_started"

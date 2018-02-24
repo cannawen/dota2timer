@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cannawen.blog.activity.PostRearrangingActivity">
+    <item
+        android:id="@+id/menu_game_edit_events"
+        android:orderInCategory="100"
+        android:title="@string/menu_game_action_edit_events"
+        app:showAsAction="never" />
+</menu>

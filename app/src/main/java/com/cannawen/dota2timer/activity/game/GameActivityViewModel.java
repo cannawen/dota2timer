@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity;
+package com.cannawen.dota2timer.activity.game;
 
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;

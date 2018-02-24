@@ -54,7 +54,7 @@ public class DotaGame extends GameState implements Game {
     }
 
     private void initializeState() {
-        gameTime = -75;
+        gameTime = 598;
         state = State.UNSTARTED;
 
         timer = new Timer();
