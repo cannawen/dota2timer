@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
+import com.cannawen.dota2timer.game.DotaGameController;
 import com.cannawen.dota2timer.game.GameController;
 import com.cannawen.dota2timer.game.GameDisplayer;
 
@@ -31,6 +32,10 @@ public class GameActivity extends Activity {
         tts = new TextToSpeech(getApplicationContext(), null);
     }
 
+    private void syncUI() {
+
+    }
+
     public void startGame(View view) {
         createNewGame();
         gameController.start();
@@ -48,7 +53,7 @@ public class GameActivity extends Activity {
 
     public void playOrPauseGame(View view) {
         Button button = findViewById(R.id.play_pause_button);
-        if (gameController.isPaused()) {
+        if (gameController.getState() == GameController.State.PAUSED) {
             gameController.resume();
             button.setText(R.string.game_action_pause);
         } else {
@@ -86,10 +91,11 @@ public class GameActivity extends Activity {
 
     private void createNewGame() {
         try {
-            gameController = new GameController(getApplicationContext(), new MainGameDisplayer());
+            gameController = new DotaGameController(getApplicationContext(), new MainGameDisplayer());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        syncUI();
     }
 
     class MainGameDisplayer implements GameDisplayer {

@@ -1,80 +1,49 @@
 package com.cannawen.dota2timer.game;
 
-import android.content.Context;
-import android.util.Log;
+import android.support.annotation.IntDef;
 
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import org.yaml.snakeyaml.Yaml;
+public interface GameController {
+    void start();
+    void stop();
+    void pause();
+    void resume();
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Timer;
-import java.util.TimerTask;
+    void increaseTime();
+    void decreaseTime();
 
-public class GameController {
+    @State int getState();
 
-    private GameDisplayer displayer;
-    private int secondsElapsed;
-    private Timer timer;
-    private Configuration config;
-
-    public GameController(Context context, GameDisplayer gameDisplayer) throws IOException {
-        displayer = gameDisplayer;
-        secondsElapsed = -75;
-        InputStream inputStream = context.getAssets().open("configuration.yml");
-
-        Yaml yaml = new Yaml();
-        config = yaml.loadAs(inputStream, Configuration.class);
-        Log.d("", config.toString());
+    @IntDef({State.UNSTARTED, State.PLAYING, State.PAUSED, State.FINISHED})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface State {
+        int UNSTARTED = 0;
+        int PLAYING = 1;
+        int PAUSED = 2;
+        int FINISHED = 3;
     }
 
-    public void start() {
-        if (timer == null) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    displayer.showTime(secondsElapsed);
-
-                    for (Event event : config.getEvents()) {
-                        if (event.triggeredAt(secondsElapsed)) {
-                            displayer.notify(event.getName());
-                        }
-                    }
-                    secondsElapsed++;
-                }
-            }, 0, 1000);
-        }
-    }
-
-    public void stop() {
-        pause();
-    }
-
-    public void pause() {
-        if (timer != null) {
-            timer.cancel();
-        }
-        timer = null;
-    }
-
-    public boolean isPaused() {
-        return timer == null;
-    }
-
-    public void resume() {
-        start();
-    }
-
-    public void increaseTime() {
-        secondsElapsed++;
-        displayer.showTime(secondsElapsed);
-    }
-
-    public void decreaseTime() {
-        secondsElapsed--;
-        displayer.showTime(secondsElapsed);
-    }
+//    String convertStateToString(@State int state) {
+//        String stateString;
+//        switch (state) {
+//            case State.UNSTARTED:
+//                stateString = "UNSTARTED";
+//                break;
+//                break;
+//            case State.PAUSED:
+//                stateString = "PAUSED";
+//                break;
+//            case State.PLAYING:
+//                stateString = "PLAYING";
+//                break;
+//            case State.FINISHED:
+//                stateString = "FINISHED";
+//                break;
+//            default:
+//                stateString = "N/A";
+//        }
+//        return stateString;
+//    }
 }
