@@ -1,25 +1,21 @@
 package com.cannawen.dota2timer.game;
 
 import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DotaGame implements Game, GameState {
     protected GameStateChangeListener listener;
-
-    private int secondsElapsed;
     private Timer timer;
-    private Configuration config;
 
-    private @State
-    int state;
+    @State
+    private int state;
+    private int secondsElapsed;
+    private Configuration config;
 
     public DotaGame(Configuration config, GameStateChangeListener listener) {
         this.config = config;
@@ -107,14 +103,8 @@ public class DotaGame implements Game, GameState {
     }
 
     @Override
-    public List<String> events() {
-        List<String> eventNames = new ArrayList<>();
-        for (Event event : config.getEvents()) {
-            if (event.triggeredAt(secondsElapsed)) {
-                eventNames.add(event.getName());
-            }
-        }
-        return eventNames;
+    public Configuration configuration() {
+        return config;
     }
 
     @Override

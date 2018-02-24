@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
@@ -19,6 +20,7 @@ import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
@@ -131,7 +133,15 @@ public class GameActivity extends Activity  {
                 public void run() {
                     switch (gameState.getState()) {
                         case GameState.State.PLAYING: {
-                            configurePlayingGameView(timeString(gameState.elapsedTime()), gameState.events());
+                            Configuration config = gameState.configuration();
+                            List<String> eventNames = new ArrayList<>();
+                            for (Event event : config.getEvents()) {
+                                if (event.triggeredAt(gameState.elapsedTime())) {
+                                    eventNames.add(event.getName());
+                                }
+                            }
+
+                            configurePlayingGameView(timeString(gameState.elapsedTime()), eventNames);
                             break;
                         }
                         case GameState.State.PAUSED: {

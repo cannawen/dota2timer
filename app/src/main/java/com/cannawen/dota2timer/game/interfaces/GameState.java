@@ -2,14 +2,15 @@ package com.cannawen.dota2timer.game.interfaces;
 
 import android.support.annotation.IntDef;
 
+import com.cannawen.dota2timer.configuration.Configuration;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.List;
 
 public interface GameState {
     int elapsedTime();
 
-    List<String> events();
+    Configuration configuration();
 
     @State
     int getState();
