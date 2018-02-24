@@ -1,4 +1,6 @@
 language: android
+sudo: required
+jdk: oraclejdk8
 android:
   components:
     - tools
@@ -19,6 +21,7 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 script:
+  - ./gradlew test
   - ./gradlew assembleDebug
   - >
     curl
@@ -37,3 +40,8 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+after_success:
+  - ./gradlew jacocoTestReport
+  - pip install --user codecov
+  - codecov
+after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
