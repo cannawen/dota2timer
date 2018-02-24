@@ -4,18 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:layout_margin="20dp"
     tools:context="com.cannawen.dota2timer.activity.configuration.ConfigurationActivity">
 
     <TextView
         android:id="@+id/activity_configuration_description_event"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/configuration_title_event_description"
         app:layout_constraintBottom_toTopOf="@id/activity_configuration_recycler_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/activity_configuration_description_enabled"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintVertical_weight="1" />
 
     <TextView
@@ -24,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/configuration_title_enabled"
         app:layout_constraintBottom_toBottomOf="@id/activity_configuration_description_event"
+        app:layout_constraintLeft_toRightOf="@id/activity_configuration_description_event"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

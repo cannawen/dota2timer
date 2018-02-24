@@ -40,8 +40,14 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
     }
 
     class ConfigurationViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.cell_edit_event_description_text)
-        TextView descriptionText;
+        @BindView(R.id.cell_edit_event_name)
+        TextView nameText;
+        @BindView(R.id.cell_edit_event_initial)
+        TextView initialText;
+        @BindView(R.id.cell_edit_event_period)
+        TextView periodText;
+        @BindView(R.id.cell_edit_event_notice)
+        TextView noticeText;
         @BindView(R.id.cell_edit_event_enabled_box)
         CheckBox enabledCheckBox;
 
@@ -51,7 +57,11 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
         }
 
         void configureWithEvent(Event event, int position) {
-            descriptionText.setText(event.getName());
+            nameText.setText(event.getName());
+            initialText.setText(String.valueOf(event.getTime_initial()));
+            periodText.setText(String.valueOf(event.getTime_repeat()));
+            noticeText.setText(String.valueOf(event.getTime_advance_notice()));
+
             enabledCheckBox.setChecked(event.isEnabled());
             enabledCheckBox.setTag(position);
             enabledCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
