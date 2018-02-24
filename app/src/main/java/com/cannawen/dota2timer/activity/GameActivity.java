@@ -81,7 +81,7 @@ public class GameActivity extends Activity {
         loader.getConfiguration(new ConfigurationLoaderListener() {
             @Override
             public void onSuccess(Configuration configuration) {
-                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGameDisplayer()));
+                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
             }
 
             @Override
@@ -91,7 +91,7 @@ public class GameActivity extends Activity {
         });
     }
 
-    private class DotaGameDisplayer implements GameActivityViewModel.GameDisplayer {
+    class DotaGamePresenter implements GameActivityViewModel.GamePresenter {
         @Override
         public void configurePlayingGameView(final String time, final List<String> events) {
             runOnUiThread(new Runnable() {

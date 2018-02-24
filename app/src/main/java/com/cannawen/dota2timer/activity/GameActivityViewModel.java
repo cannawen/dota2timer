@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class GameActivityViewModel implements GameStateChangeListener {
-    private GameDisplayer displayer;
+    private GamePresenter presenter;
 
     @Override
     public void gameStateChanged(final GameState gameState) {
@@ -26,17 +26,17 @@ public class GameActivityViewModel implements GameStateChangeListener {
                     }
                 }
 
-                displayer.configurePlayingGameView(timeString(gameState), eventNames);
+                presenter.configurePlayingGameView(timeString(gameState), eventNames);
                 break;
             }
             case GameState.State.PAUSED: {
-                displayer.configurePausedGameView(timeString(gameState));
+                presenter.configurePausedGameView(timeString(gameState));
                 break;
             }
             case GameState.State.UNSTARTED:
             case GameState.State.FINISHED:
             default: {
-                displayer.showNonStartedGame();
+                presenter.showNonStartedGame();
                 break;
             }
         }
@@ -58,7 +58,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
         return String.format("%s%02d:%02d:%02d", signString, hours, minutes, seconds);
     }
 
-    public interface GameDisplayer {
+    public interface GamePresenter {
         void configurePlayingGameView(String time, List<String> events);
 
         void configurePausedGameView(String time);
