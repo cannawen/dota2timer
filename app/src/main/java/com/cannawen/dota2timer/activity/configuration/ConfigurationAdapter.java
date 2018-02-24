@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity.editconfiguration;
+package com.cannawen.dota2timer.activity.configuration;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

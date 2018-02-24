@@ -8,6 +8,8 @@
     <string name="game_action_end_confirmation_button_positive">End game</string>
     <string name="game_action_end_confirmation_button_negative">Cancel</string>
     <string name="menu_game_action_edit_events">Edit Events</string>
-    <string name="edit_configuration_title_event_description">Event Description</string>
-    <string name="edit_configuration_title_enabled">Enabled</string>
+    <string name="configuration_title_event_description">Event Description</string>
+    <string name="configuration_title_enabled">Enabled</string>
+    <string name="configuration_action_cancel">Cancel</string>
+    <string name="configuration_action_save">Save</string>
 </resources>

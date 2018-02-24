@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.activity.editconfiguration.EditConfigurationActivity;
+import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
@@ -69,7 +69,7 @@ public class GameActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_game_edit_events: {
-                Intent intent = EditConfigurationActivity.createActivityIntent(this, configuration);
+                Intent intent = ConfigurationActivity.createActivityIntent(this, configuration);
                 startActivityForResult(intent, EDIT_CONFIGURATION_ACTIVITY_RESULT);
                 return true;
             }
@@ -86,7 +86,7 @@ public class GameActivity extends Activity {
             return;
         }
         if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
-            configuration = EditConfigurationActivity.deserializeConfigurationFromIntent(data);
+            configuration = ConfigurationActivity.deserializeConfigurationFromIntent(data);
             game.setConfiguration(configuration);
         }
     }
