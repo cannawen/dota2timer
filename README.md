@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cannawen/dota2timer.svg?branch=master)](https://travis-ci.org/cannawen/dota2timer)
+[![Build Status](https://travis-ci.org/cannawen/dota2timer.svg?branch=master)](https://travis-ci.org/cannawen/dota2timer) [![codecov](https://codecov.io/gh/cannawen/dota2timer/branch/master/graph/badge.svg)](https://codecov.io/gh/cannawen/dota2timer)
 
 ## dota2timer
 
