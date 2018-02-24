@@ -98,6 +98,7 @@ public class DotaGameController implements GameController {
             case State.PAUSED:
             case State.UNSTARTED:
             default:
+                break;
         }
     }
 }

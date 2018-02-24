@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGameController;
@@ -34,33 +35,45 @@ public class GameActivity extends Activity {
     }
 
     private void syncUI() {
-
+        switch (gameController.getState()) {
+            case GameController.State.PLAYING: {
+                ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
+                findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
+                findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+                break;
+            }
+            case GameController.State.PAUSED: {
+                ((Button)findViewById(R.id.play_pause_button)).setText(R.string.game_action_resume);
+                break;
+            }
+            case GameController.State.UNSTARTED:
+            case GameController.State.FINISHED:
+            default: {
+                findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
+                findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
+                break;
+            }
+        }
     }
 
     public void startGame(View view) {
         createNewGame();
         gameController.start();
-        ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
-        findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
-        findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+        syncUI();
     }
 
     public void stopGame() {
         gameController.stop();
-        gameController = null;
-        findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
-        findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
+        syncUI();
     }
 
     public void playOrPauseGame(View view) {
-        Button button = findViewById(R.id.play_pause_button);
         if (gameController.getState() == GameController.State.PAUSED) {
             gameController.resume();
-            button.setText(R.string.game_action_pause);
         } else {
             gameController.pause();
-            button.setText(R.string.game_action_resume);
         }
+        syncUI();
     }
 
     public void increaseTime(View view) {
