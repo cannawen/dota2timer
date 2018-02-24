@@ -8,17 +8,12 @@ import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DotaGame implements Game, GameState {
+public class DotaGame extends GameState implements Game {
     protected GameStateChangeListener listener;
     private Timer timer;
 
-    @State
-    private int state;
-    private int secondsElapsed;
-    private Configuration config;
-
     public DotaGame(Configuration config, GameStateChangeListener listener) {
-        this.config = config;
+        super(config);
         this.listener = listener;
 
         initializeState();
@@ -48,18 +43,18 @@ public class DotaGame implements Game, GameState {
 
     @Override
     public void increaseTime() {
-        secondsElapsed++;
+        gameTime++;
         triggerListener();
     }
 
     @Override
     public void decreaseTime() {
-        secondsElapsed--;
+        gameTime--;
         triggerListener();
     }
 
     private void initializeState() {
-        secondsElapsed = -75;
+        gameTime = -75;
         state = State.UNSTARTED;
 
         if (timer == null) {
@@ -77,7 +72,7 @@ public class DotaGame implements Game, GameState {
     private void tick() {
         switch (state) {
             case State.PLAYING: {
-                secondsElapsed++;
+                gameTime++;
                 break;
             }
             case State.FINISHED: {
@@ -96,21 +91,4 @@ public class DotaGame implements Game, GameState {
     private void triggerListener() {
         listener.gameStateChanged(this);
     }
-
-    @Override
-    public int elapsedTime() {
-        return secondsElapsed;
-    }
-
-    @Override
-    public Configuration configuration() {
-        return config;
-    }
-
-    @Override
-    public @State
-    int getState() {
-        return state;
-    }
-
 }

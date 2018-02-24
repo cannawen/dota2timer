@@ -12,20 +12,16 @@ import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener;
+import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
-import com.cannawen.dota2timer.game.interfaces.GameState;
-import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-public class GameActivity extends Activity  {
+public class GameActivity extends Activity {
 
     private Game game;
 
@@ -85,7 +81,7 @@ public class GameActivity extends Activity  {
         loader.getConfiguration(new ConfigurationLoaderListener() {
             @Override
             public void onSuccess(Configuration configuration) {
-                game = new DotaGame(configuration, new GameActivityViewModel());
+                game = new DotaGame(configuration, new GameActivityViewModel(new DotaGameDisplayer()));
             }
 
             @Override
@@ -95,83 +91,53 @@ public class GameActivity extends Activity  {
         });
     }
 
-    private void configurePlayingGameView(String time, List<String> events) {
-        for (String eventString : events) {
-            tts.speak(eventString, QUEUE_ADD, null, eventString);
-        }
-
-        configureStartedGameView(time, false);
-    }
-
-    private void configurePausedGameView(String time) {
-        configureStartedGameView(time, true);
-    }
-
-    private void configureStartedGameView(String time, boolean paused) {
-        findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
-
-        findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
-
-        ((TextView) findViewById(R.id.time_text)).setText(time);
-        @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
-        ((TextView) findViewById(R.id.play_pause_button)).setText(buttonStringRes);
-        ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
-    }
-
-    private void showNonStartedGame() {
-        ((TextView) findViewById(R.id.time_text)).setText("");
-        findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
-        ((Button) findViewById(R.id.game_not_started_view)).setText(R.string.game_action_start);
-        findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
-    }
-
-    public class GameActivityViewModel implements GameStateChangeListener {
+    private class DotaGameDisplayer implements GameActivityViewModel.GameDisplayer {
         @Override
-        public void gameStateChanged(final GameState gameState) {
+        public void configurePlayingGameView(final String time, final List<String> events) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    switch (gameState.getState()) {
-                        case GameState.State.PLAYING: {
-                            Configuration config = gameState.configuration();
-                            List<String> eventNames = new ArrayList<>();
-                            for (Event event : config.getEvents()) {
-                                if (event.triggeredAt(gameState.elapsedTime())) {
-                                    eventNames.add(event.getName());
-                                }
-                            }
-
-                            configurePlayingGameView(timeString(gameState.elapsedTime()), eventNames);
-                            break;
-                        }
-                        case GameState.State.PAUSED: {
-                            configurePausedGameView(timeString(gameState.elapsedTime()));
-                            break;
-                        }
-                        case GameState.State.UNSTARTED:
-                        case GameState.State.FINISHED:
-                        default: {
-                            showNonStartedGame();
-                            break;
-                        }
+                    for (String eventString : events) {
+                        tts.speak(eventString, QUEUE_ADD, null, eventString);
                     }
+
+                    configureStartedGameView(time, false);
                 }
             });
         }
 
-        private String timeString(int secondsElapsed) {
-            String signString = "";
-            if (secondsElapsed < 0) {
-                signString = "-";
-                secondsElapsed = secondsElapsed * -1;
-            }
+        @Override
+        public void configurePausedGameView(final String time) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    configureStartedGameView(time, true);
+                }
+            });
+        }
 
-            int hours = secondsElapsed / 3600;
-            final int minutes = (secondsElapsed % 3600) / 60;
-            int seconds = secondsElapsed % 60;
+        @Override
+        public void showNonStartedGame() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((TextView) findViewById(R.id.time_text)).setText("");
+                    findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
+                    ((Button) findViewById(R.id.game_not_started_view)).setText(R.string.game_action_start);
+                    findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
+                }
+            });
+        }
 
-            String timeSeparator = getResources().getString(R.string.game_time_separator);
-            return String.format("%s%02d%s%02d%s%02d", signString, hours, timeSeparator, minutes, timeSeparator, seconds);
+        private void configureStartedGameView(String time, boolean paused) {
+            findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+
+            findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
+
+            ((TextView) findViewById(R.id.time_text)).setText(time);
+            @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
+            ((TextView) findViewById(R.id.play_pause_button)).setText(buttonStringRes);
+            ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
         }
     }
 }
