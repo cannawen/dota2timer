@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class EditConfigurationActivity extends Activity {
 
@@ -22,9 +27,18 @@ public class EditConfigurationActivity extends Activity {
         return (Configuration) intent.getSerializableExtra(INTENT_CONFIGURATION_KEY);
     }
 
+    @BindView(R.id.activity_edit_configuration_recycler_view)
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_configuration);
+        ButterKnife.bind(this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
+        ConfigurationAdapter adapter = new ConfigurationAdapter(getApplicationContext(), deserializeConfigurationFromIntent(getIntent()));
+        recyclerView.setAdapter(adapter);
     }
 }

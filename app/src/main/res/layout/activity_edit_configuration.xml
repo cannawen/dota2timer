@@ -4,6 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context="com.cannawen.dota2timer.activity.editconfiguration.EditConfigurationActivity">
+
+    <TextView
+        android:id="@+id/activity_edit_configuration_description_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_configuration_title_event_description"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintBottom_toTopOf="@id/activity_edit_configuration_recycler_view"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/activity_edit_configuration_description_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_configuration_title_enabled"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/activity_edit_configuration_description_event"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_edit_configuration_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/activity_edit_configuration_cancel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_edit_configuration_description_event"
+        app:layout_constraintVertical_weight="2" />
+
+    <Button
+        android:id="@+id/activity_edit_configuration_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/activity_edit_configuration_save"
+        app:layout_constraintTop_toBottomOf="@id/activity_edit_configuration_recycler_view"
+        app:layout_constraintVertical_weight="1" />
+
+    <Button
+        android:id="@+id/activity_edit_configuration_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/activity_edit_configuration_cancel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/activity_edit_configuration_cancel"
+        app:layout_constraintVertical_weight="1" />
 
 </android.support.constraint.ConstraintLayout>
