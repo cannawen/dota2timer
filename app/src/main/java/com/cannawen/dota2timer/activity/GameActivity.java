@@ -29,6 +29,8 @@ import butterknife.OnClick;
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
+    private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
+
     @BindView(R.id.activity_game_container_not_started)
     View gameNotStartedView;
     @BindView(R.id.activity_game_button_start)
@@ -41,7 +43,9 @@ public class GameActivity extends Activity {
     Button playPauseButton;
     @BindView(R.id.activity_game_button_end)
     Button resetButton;
+
     private Game game;
+    private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
 
     @Override
@@ -64,13 +68,25 @@ public class GameActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_game_edit_events: {
-                Intent intent = new Intent(this, EditConfigurationActivity.class);
-                startActivity(intent);
+                Intent intent = EditConfigurationActivity.createActivityIntent(this, configuration);
+                startActivityForResult(intent, EDIT_CONFIGURATION_ACTIVITY_RESULT);
                 return true;
             }
             default: {
                 return super.onOptionsItemSelected(item);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
+            configuration = EditConfigurationActivity.deserializeConfigurationFromIntent(data);
+            game.setConfiguration(configuration);
         }
     }
 
@@ -122,8 +138,10 @@ public class GameActivity extends Activity {
     private void createNewGame() {
         LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
         loader.getConfiguration(new ConfigurationLoaderListener() {
+
             @Override
             public void onSuccess(Configuration configuration) {
+                GameActivity.this.configuration = configuration;
                 game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
             }
 
