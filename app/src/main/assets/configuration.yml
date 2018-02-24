@@ -2,16 +2,19 @@ events:
   - name: "Runes"
     time_initial: 120
     time_repeat: 120
-    time_advance_notice: 10
+    time_advance_notice: 7
   - name: "Stack"
     time_initial: 113
     time_repeat: 60
-    time_advance_notice: 10
+    time_advance_notice: 7
   - name: "Pull"
     time_initial: 71
     time_expire: 600
     time_repeat: 30
-    time_advance_notice: 10
+    time_advance_notice: 7
+  - name: "Ward"
+    time_initial: 150
+    time_repeat: 150
   - name: "Tome"
     time_initial: 600
     time_repeat: 600

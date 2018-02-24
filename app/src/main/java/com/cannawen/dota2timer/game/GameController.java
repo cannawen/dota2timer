@@ -22,7 +22,7 @@ public class GameController {
 
     public GameController(Context context, GameDisplayer gameDisplayer) throws IOException {
         displayer = gameDisplayer;
-        secondsElapsed = 0;
+        secondsElapsed = -75;
         InputStream inputStream = context.getAssets().open("configuration.yml");
 
         Yaml yaml = new Yaml();
