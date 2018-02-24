@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity;
+package com.cannawen.dota2timer.activity.editconfiguration;
 
 import android.app.Activity;
 import android.content.Context;
