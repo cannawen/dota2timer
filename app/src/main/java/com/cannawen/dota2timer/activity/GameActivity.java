@@ -34,6 +34,7 @@ public class GameActivity extends Activity {
     public void startGame(View view) {
         createNewGame();
         gameController.start();
+        ((TextView)findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
         findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
         findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
     }
