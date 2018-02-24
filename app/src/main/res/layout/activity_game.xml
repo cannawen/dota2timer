@@ -14,15 +14,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:onClick="startGame"
-        android:text="@string/game_action_start"
-        tools:visibility="invisible" />
+        android:onClick="startGame" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/game_started_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         tools:visibility="visible">
 
         <LinearLayout
@@ -69,8 +66,7 @@
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="resetGame"
-            android:text="@string/game_action_reset"
+            android:onClick="confirmIfShouldStopGame"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />

@@ -3,7 +3,6 @@ package com.cannawen.dota2timer.game;
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,33 +26,37 @@ public class DotaGameController implements GameController {
     @Override
     public void start() {
         state = State.PLAYING;
+        updateDisplayer(false);
     }
 
     @Override
     public void stop() {
         state = State.FINISHED;
+        updateDisplayer(false);
     }
 
     @Override
     public void pause() {
         state = State.PAUSED;
+        updateDisplayer(false);
     }
 
     @Override
     public void resume() {
         state = State.PLAYING;
+        updateDisplayer(false);
     }
 
     @Override
     public void increaseTime() {
         secondsElapsed++;
-        displayer.showTime(secondsElapsed);
+        updateDisplayer(false);
     }
 
     @Override
     public void decreaseTime() {
         secondsElapsed--;
-        displayer.showTime(secondsElapsed);
+        updateDisplayer(false);
     }
 
     @Override
@@ -81,13 +84,6 @@ public class DotaGameController implements GameController {
         switch (state) {
             case State.PLAYING: {
                 secondsElapsed++;
-                displayer.showTime(secondsElapsed);
-
-                for (Event event : config.getEvents()) {
-                    if (event.triggeredAt(secondsElapsed)) {
-                        displayer.notify(event.getName());
-                    }
-                }
                 break;
             }
             case State.FINISHED: {
@@ -99,6 +95,17 @@ public class DotaGameController implements GameController {
             case State.UNSTARTED:
             default:
                 break;
+        }
+        updateDisplayer(true);
+    }
+
+    private void updateDisplayer(boolean triggerEvents) {
+        displayer.showTime(secondsElapsed);
+
+        for (Event event : config.getEvents()) {
+            if (triggerEvents && event.triggeredAt(secondsElapsed)) {
+                displayer.notify(event.getName());
+            }
         }
     }
 }

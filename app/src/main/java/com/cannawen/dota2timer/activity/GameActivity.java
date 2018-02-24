@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGameController;
@@ -32,39 +31,19 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         tts = new TextToSpeech(getApplicationContext(), null);
-    }
-
-    private void syncUI() {
-        switch (gameController.getState()) {
-            case GameController.State.PLAYING: {
-                ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
-                findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
-                findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
-                break;
-            }
-            case GameController.State.PAUSED: {
-                ((Button)findViewById(R.id.play_pause_button)).setText(R.string.game_action_resume);
-                break;
-            }
-            case GameController.State.UNSTARTED:
-            case GameController.State.FINISHED:
-            default: {
-                findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
-                findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
-                break;
-            }
-        }
+        createNewGame();
+        syncUIWithState();
     }
 
     public void startGame(View view) {
-        createNewGame();
         gameController.start();
-        syncUI();
+        syncUIWithState();
     }
 
-    public void stopGame() {
+    private void stopGame() {
         gameController.stop();
-        syncUI();
+        createNewGame();
+        syncUIWithState();
     }
 
     public void playOrPauseGame(View view) {
@@ -73,7 +52,7 @@ public class GameActivity extends Activity {
         } else {
             gameController.pause();
         }
-        syncUI();
+        syncUIWithState();
     }
 
     public void increaseTime(View view) {
@@ -84,7 +63,7 @@ public class GameActivity extends Activity {
         gameController.decreaseTime();
     }
 
-    public void resetGame(View view) {
+    public void confirmIfShouldStopGame(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirm Reset Game?");
         alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -117,7 +96,41 @@ public class GameActivity extends Activity {
             }
         });
 
-        syncUI();
+        syncUIWithState();
+    }
+
+    private void syncUIWithState() {
+        switch (gameController.getState()) {
+            case GameController.State.PLAYING: {
+                showGameStartedView();
+                ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
+                break;
+            }
+            case GameController.State.PAUSED: {
+                showGameStartedView();
+                ((Button)findViewById(R.id.play_pause_button)).setText(R.string.game_action_resume);
+                break;
+            }
+            case GameController.State.UNSTARTED:
+            case GameController.State.FINISHED:
+            default: {
+                ((TextView) findViewById(R.id.time_text)).setText("");
+                showGameNotStartedView();
+                break;
+            }
+        }
+    }
+
+    private void showGameNotStartedView() {
+        findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
+        ((Button) findViewById(R.id.game_not_started_view)).setText(R.string.game_action_start);
+        findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
+    }
+
+    private void showGameStartedView() {
+        findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+        findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
     }
 
     class MainGameDisplayer implements GameDisplayer {
