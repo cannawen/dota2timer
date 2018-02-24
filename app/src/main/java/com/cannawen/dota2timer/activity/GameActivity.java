@@ -19,23 +19,41 @@ import com.cannawen.dota2timer.game.interfaces.Game;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity {
-
     private Game game;
 
     private TextToSpeech tts;
+    
+    @BindView(R.id.activity_game_container_not_started)
+    View gameNotStartedView;
+    @BindView(R.id.activity_game_button_start)
+    Button startButton;
+    @BindView(R.id.activity_game_container_started)
+    View gameStartedView;
+    @BindView(R.id.activity_game_text_time)
+    TextView timeText;
+    @BindView(R.id.activity_game_button_play_or_pause)
+    Button playPauseButton;
+    @BindView(R.id.activity_game_button_stop)
+    Button resetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        ButterKnife.bind(this);
 
         tts = new TextToSpeech(getApplicationContext(), null);
         createNewGame();
     }
 
+    @OnClick(R.id.activity_game_button_start)
     public void startGame(View view) {
         game.start();
     }
@@ -45,18 +63,22 @@ public class GameActivity extends Activity {
         createNewGame();
     }
 
+    @OnClick(R.id.activity_game_button_play_or_pause)
     public void pauseOrResume(View view) {
         game.pauseOrResume();
     }
 
+    @OnClick(R.id.activity_game_button_time_increase)
     public void increaseTime(View view) {
         game.increaseTime();
     }
 
+    @OnClick(R.id.activity_game_button_time_decrease)
     public void decreaseTime(View view) {
         game.decreaseTime();
     }
 
+    @OnClick(R.id.activity_game_button_stop)
     public void confirmIfShouldStopGame(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirm Reset Game?");
@@ -121,23 +143,23 @@ public class GameActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((TextView) findViewById(R.id.time_text)).setText("");
-                    findViewById(R.id.game_not_started_view).setVisibility(View.VISIBLE);
-                    ((Button) findViewById(R.id.game_not_started_view)).setText(R.string.game_action_start);
-                    findViewById(R.id.game_started_view).setVisibility(View.INVISIBLE);
+                    timeText.setText("");
+                    gameNotStartedView.setVisibility(View.VISIBLE);
+                    startButton.setText(R.string.game_action_start);
+                    gameStartedView.setVisibility(View.INVISIBLE);
                 }
             });
         }
 
         private void configureStartedGameView(String time, boolean paused) {
-            findViewById(R.id.game_not_started_view).setVisibility(View.INVISIBLE);
+            gameNotStartedView.setVisibility(View.INVISIBLE);
 
-            findViewById(R.id.game_started_view).setVisibility(View.VISIBLE);
+            gameStartedView.setVisibility(View.VISIBLE);
 
-            ((TextView) findViewById(R.id.time_text)).setText(time);
+            timeText.setText(time);
             @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
-            ((TextView) findViewById(R.id.play_pause_button)).setText(buttonStringRes);
-            ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
+            playPauseButton.setText(buttonStringRes);
+            resetButton.setText(R.string.game_action_reset);
         }
     }
 }
