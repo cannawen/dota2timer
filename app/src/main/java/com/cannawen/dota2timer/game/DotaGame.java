@@ -26,7 +26,7 @@ public class DotaGame extends GameState implements Game {
     }
 
     @Override
-    public void stop() {
+    public void end() {
         state = State.FINISHED;
         triggerListener();
     }

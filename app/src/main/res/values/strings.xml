@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">Dota2timer</string>
+    <string name="app_name">dota2timer</string>
     <string name="game_action_pause">Pause Game</string>
     <string name="game_action_resume">Resume Game</string>
     <string name="game_action_start">Start Game</string>
-    <string name="game_action_reset">Reset Game</string>
+    <string name="game_action_end">End Game</string>
+    <string name="game_action_end_confirmation_message">Are you sure?</string>
+    <string name="game_action_end_confirmation_button_positive">End game</string>
+    <string name="game_action_end_confirmation_button_negative">Cancel</string>
 </resources>

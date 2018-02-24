@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
     private Game game;
 
     private TextToSpeech tts;
-    
+
     @BindView(R.id.activity_game_container_not_started)
     View gameNotStartedView;
     @BindView(R.id.activity_game_button_start)
@@ -40,7 +40,7 @@ public class GameActivity extends Activity {
     TextView timeText;
     @BindView(R.id.activity_game_button_play_or_pause)
     Button playPauseButton;
-    @BindView(R.id.activity_game_button_stop)
+    @BindView(R.id.activity_game_button_end)
     Button resetButton;
 
     @Override
@@ -58,8 +58,8 @@ public class GameActivity extends Activity {
         game.start();
     }
 
-    private void stopGame() {
-        game.stop();
+    private void endGame() {
+        game.end();
         createNewGame();
     }
 
@@ -78,18 +78,18 @@ public class GameActivity extends Activity {
         game.decreaseTime();
     }
 
-    @OnClick(R.id.activity_game_button_stop)
-    public void confirmIfShouldStopGame(View view) {
+    @OnClick(R.id.activity_game_button_end)
+    public void confirmEndGame(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirm Reset Game?");
-        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        alert.setMessage(R.string.game_action_end_confirmation_message);
+        alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                stopGame();
+                endGame();
                 dialog.dismiss();
             }
         });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -115,7 +115,20 @@ public class GameActivity extends Activity {
 
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {
         @Override
-        public void configurePlayingGameView(final String time, final List<String> events) {
+        public void showUnstartedGameView() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    timeText.setText("");
+                    gameNotStartedView.setVisibility(View.VISIBLE);
+                    startButton.setText(R.string.game_action_start);
+                    gameStartedView.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+
+        @Override
+        public void showPlayingGameView(final String time, final List<String> events) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -129,7 +142,7 @@ public class GameActivity extends Activity {
         }
 
         @Override
-        public void configurePausedGameView(final String time) {
+        public void showPausedGameView(final String time) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -139,16 +152,8 @@ public class GameActivity extends Activity {
         }
 
         @Override
-        public void showNonStartedGame() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    timeText.setText("");
-                    gameNotStartedView.setVisibility(View.VISIBLE);
-                    startButton.setText(R.string.game_action_start);
-                    gameStartedView.setVisibility(View.INVISIBLE);
-                }
-            });
+        public void showFinishedGameView() {
+            showUnstartedGameView();
         }
 
         private void configureStartedGameView(String time, boolean paused) {
@@ -159,7 +164,7 @@ public class GameActivity extends Activity {
             timeText.setText(time);
             @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
             playPauseButton.setText(buttonStringRes);
-            resetButton.setText(R.string.game_action_reset);
+            resetButton.setText(R.string.game_action_end);
         }
     }
 }

@@ -63,12 +63,12 @@
             android:id="@+id/activity_game_button_play_or_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/activity_game_button_stop"
+            app:layout_constraintBottom_toTopOf="@+id/activity_game_button_end"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
         <Button
-            android:id="@+id/activity_game_button_stop"
+            android:id="@+id/activity_game_button_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
