@@ -1,75 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:keepScreenOn="true"
-    android:orientation="vertical"
-    tools:context="com.cannawen.dota2timer.activity.GameActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.cannawen.dota2timer.activity.GameActivityViewModel" />
+    </data>
 
-    <Button
-        android:id="@+id/game_not_started_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="startGame" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/game_started_view"
+    <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="visible">
+        android:gravity="center"
+        android:keepScreenOn="true"
+        android:orientation="vertical"
+        tools:context="com.cannawen.dota2timer.activity.GameActivity">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/game_start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/play_pause_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_gravity="center"
+            android:onClick="startGame"
+            android:text="@{viewModel.startGameString}"
+            android:visibility="@{viewModel.gameInProgress ? View.GONE : View.VISIBLE}" />
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="increaseTime"
-                android:src="@drawable/ic_add_24dp" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.gameInProgress ? View.VISIBLE : View.GONE}">
 
-            <TextView
-                android:id="@+id/time_text"
-                style="@style/GameTimeText"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="00:00:00" />
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/play_pause_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="decreaseTime"
-                android:src="@drawable/ic_remove_24dp" />
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:onClick="increaseTime"
+                    android:src="@drawable/ic_add_24dp" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/time_text"
+                    style="@style/GameTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="00:00:00" />
 
-        <Button
-            android:id="@+id/play_pause_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="pauseOrResume"
-            app:layout_constraintBottom_toTopOf="@+id/reset_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:onClick="decreaseTime"
+                    android:src="@drawable/ic_remove_24dp" />
 
-        <Button
-            android:id="@+id/reset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="confirmIfShouldStopGame"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
 
-</FrameLayout>
+            <Button
+                android:id="@+id/play_pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="pauseOrResume"
+                android:text="@{viewModel.pauseOrResumeString}"
+                app:layout_constraintBottom_toTopOf="@+id/reset_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.resetString}"
+                android:onClick="confirmIfShouldStopGame"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+</layout>
