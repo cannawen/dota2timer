@@ -16,11 +16,12 @@ import com.cannawen.dota2timer.configuration.loading.ConfigurationLoaderListener
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGameController;
 import com.cannawen.dota2timer.game.GameController;
-import com.cannawen.dota2timer.game.GameDisplayer;
+import com.cannawen.dota2timer.game.GameState;
+import com.cannawen.dota2timer.game.GameStateChangeListener;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements GameStateChangeListener {
 
     private GameController gameController;
     private TextToSpeech tts;
@@ -32,18 +33,15 @@ public class GameActivity extends Activity {
 
         tts = new TextToSpeech(getApplicationContext(), null);
         createNewGame();
-        syncUIWithState();
     }
 
     public void startGame(View view) {
         gameController.start();
-        syncUIWithState();
     }
 
     private void stopGame() {
         gameController.stop();
         createNewGame();
-        syncUIWithState();
     }
 
     public void playOrPauseGame(View view) {
@@ -52,7 +50,6 @@ public class GameActivity extends Activity {
         } else {
             gameController.pause();
         }
-        syncUIWithState();
     }
 
     public void increaseTime(View view) {
@@ -87,7 +84,7 @@ public class GameActivity extends Activity {
         loader.getConfiguration(new ConfigurationLoaderListener() {
             @Override
             public void onSuccess(Configuration configuration) {
-                gameController = new DotaGameController(configuration, new MainGameDisplayer());
+                gameController = new DotaGameController(configuration, GameActivity.this);
             }
 
             @Override
@@ -100,25 +97,30 @@ public class GameActivity extends Activity {
     }
 
     private void syncUIWithState() {
-        switch (gameController.getState()) {
-            case GameController.State.PLAYING: {
-                showGameStartedView();
-                ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
-                break;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (gameController.getState()) {
+                    case GameController.State.PLAYING: {
+                        showGameStartedView();
+                        ((TextView) findViewById(R.id.play_pause_button)).setText(R.string.game_action_pause);
+                        break;
+                    }
+                    case GameController.State.PAUSED: {
+                        showGameStartedView();
+                        ((Button)findViewById(R.id.play_pause_button)).setText(R.string.game_action_resume);
+                        break;
+                    }
+                    case GameController.State.UNSTARTED:
+                    case GameController.State.FINISHED:
+                    default: {
+                        ((TextView) findViewById(R.id.time_text)).setText("");
+                        showGameNotStartedView();
+                        break;
+                    }
+                }
             }
-            case GameController.State.PAUSED: {
-                showGameStartedView();
-                ((Button)findViewById(R.id.play_pause_button)).setText(R.string.game_action_resume);
-                break;
-            }
-            case GameController.State.UNSTARTED:
-            case GameController.State.FINISHED:
-            default: {
-                ((TextView) findViewById(R.id.time_text)).setText("");
-                showGameNotStartedView();
-                break;
-            }
-        }
+        });
     }
 
     private void showGameNotStartedView() {
@@ -133,34 +135,34 @@ public class GameActivity extends Activity {
         ((TextView) findViewById(R.id.reset_button)).setText(R.string.game_action_reset);
     }
 
-    class MainGameDisplayer implements GameDisplayer {
-        @Override
-        @SuppressLint("DefaultLocale")
-        public void showTime(int secondsElapsed) {
-            String signString = "";
-            if (secondsElapsed < 0) {
-                signString = "-";
-                secondsElapsed = secondsElapsed * -1;
-            }
-
-            int hours = secondsElapsed / 3600;
-            final int minutes = (secondsElapsed % 3600) / 60;
-            int seconds = secondsElapsed % 60;
-
-            String timeSeparator = getResources().getString(R.string.game_time_separator);
-            final String timeString = String.format("%s%02d%s%02d%s%02d", signString, hours, timeSeparator, minutes, timeSeparator, seconds);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ((TextView) findViewById(R.id.time_text)).setText(timeString);
-                }
-            });
-        }
-
-        @Override
-        public void notify(String eventString) {
+    @Override
+    public void gameStateChanged(GameState gameState) {
+        showTime(gameState.elapsedTime());
+        for (String eventString : gameState.events()) {
             tts.speak(eventString, QUEUE_ADD, null, eventString);
         }
+        syncUIWithState();
+    }
+
+    private void showTime(int secondsElapsed) {
+        String signString = "";
+        if (secondsElapsed < 0) {
+            signString = "-";
+            secondsElapsed = secondsElapsed * -1;
+        }
+
+        int hours = secondsElapsed / 3600;
+        final int minutes = (secondsElapsed % 3600) / 60;
+        int seconds = secondsElapsed % 60;
+
+        String timeSeparator = getResources().getString(R.string.game_time_separator);
+        final String timeString = String.format("%s%02d%s%02d%s%02d", signString, hours, timeSeparator, minutes, timeSeparator, seconds);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) findViewById(R.id.time_text)).setText(timeString);
+            }
+        });
     }
 }

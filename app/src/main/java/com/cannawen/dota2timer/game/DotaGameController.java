@@ -3,22 +3,23 @@ package com.cannawen.dota2timer.game;
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DotaGameController implements GameController {
 
-    private GameDisplayer displayer;
+    private GameStateChangeListener displayer;
     private int secondsElapsed;
     private Timer timer;
     private Configuration config;
 
-    private @State
-    int state;
+    private @State int state;
 
-    public DotaGameController(Configuration config, GameDisplayer gameDisplayer) {
+    public DotaGameController(Configuration config, GameStateChangeListener gameStateChangeListener) {
         this.config = config;
-        this.displayer = gameDisplayer;
+        this.displayer = gameStateChangeListener;
 
         initializeState();
     }
@@ -26,43 +27,37 @@ public class DotaGameController implements GameController {
     @Override
     public void start() {
         state = State.PLAYING;
-        updateDisplayer(false);
+        updateDisplayer();
     }
 
     @Override
     public void stop() {
         state = State.FINISHED;
-        updateDisplayer(false);
+        updateDisplayer();
     }
 
     @Override
     public void pause() {
         state = State.PAUSED;
-        updateDisplayer(false);
+        updateDisplayer();
     }
 
     @Override
     public void resume() {
         state = State.PLAYING;
-        updateDisplayer(false);
+        updateDisplayer();
     }
 
     @Override
     public void increaseTime() {
         secondsElapsed++;
-        updateDisplayer(false);
+        updateDisplayer();
     }
 
     @Override
     public void decreaseTime() {
         secondsElapsed--;
-        updateDisplayer(false);
-    }
-
-    @Override
-    public @State
-    int getState() {
-        return state;
+        updateDisplayer();
     }
 
     private void initializeState() {
@@ -96,16 +91,33 @@ public class DotaGameController implements GameController {
             default:
                 break;
         }
-        updateDisplayer(true);
+        updateDisplayer();
     }
 
-    private void updateDisplayer(boolean triggerEvents) {
-        displayer.showTime(secondsElapsed);
+    private void updateDisplayer() {
+        displayer.gameStateChanged(this);
+    }
 
+    @Override
+    public int elapsedTime() {
+        return secondsElapsed;
+    }
+
+    @Override
+    public List<String> events() {
+        List<String> eventNames = new ArrayList<>();
         for (Event event : config.getEvents()) {
-            if (triggerEvents && event.triggeredAt(secondsElapsed)) {
-                displayer.notify(event.getName());
+            if (event.triggeredAt(secondsElapsed)) {
+                eventNames.add(event.getName());
             }
         }
+        return eventNames;
     }
+
+    @Override
+    public @State
+    int getState() {
+        return state;
+    }
+
 }
