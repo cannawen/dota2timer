@@ -3,11 +3,11 @@ package com.cannawen.dota2timer.configuration.loading;
 import com.cannawen.dota2timer.configuration.Configuration;
 
 public interface ConfigurationLoader {
-    void getConfiguration(ConfigurationLoaderListener listener);
+    void getConfiguration(ConfigurationLoaderStatusListener listener);
 
-    interface ConfigurationLoaderListener {
-        void onSuccess(Configuration configuration);
+    interface ConfigurationLoaderStatusListener {
+        void onLoadConfigurationSuccess(Configuration configuration);
 
-        void onFailure(Exception e);
+        void onLoadConfigurationFailure(Exception e);
     }
 }
