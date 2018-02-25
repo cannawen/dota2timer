@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EventTest {
     @Test
-    public void setting_triggeredAt_basic() throws Exception {
+    public void setting_triggeredAt_basic() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_initial(0)
@@ -20,7 +20,7 @@ public class EventTest {
     }
 
     @Test
-    public void setting_triggeredAt_startNonZero() throws Exception {
+    public void setting_triggeredAt_startNonZero() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_initial(100)
@@ -33,7 +33,7 @@ public class EventTest {
     }
 
     @Test
-    public void setting_triggeredAt_advanceNotice() throws Exception {
+    public void setting_triggeredAt_advanceNotice() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_advance_notice(1)
@@ -45,7 +45,7 @@ public class EventTest {
     }
 
     @Test
-    public void setting_triggeredAt_expiry() throws Exception {
+    public void setting_triggeredAt_expiry() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_expire(100)
@@ -58,22 +58,7 @@ public class EventTest {
     }
 
     @Test
-    public void setting_triggeredAt_all_options() throws Exception {
-        Event event = Event.builder()
-                .time_repeat(10)
-                .time_initial(100)
-                .time_advance_notice(1)
-                .time_expire(200)
-                .build();
-
-        assertEquals(event.triggeredAt(89), false);
-        assertEquals(event.triggeredAt(99), true);
-        assertEquals(event.triggeredAt(199), true);
-        assertEquals(event.triggeredAt(209), false);
-    }
-
-    @Test
-    public void setting_pull_expiry() {
+    public void setting_triggeredAt_allOptions() {
         Event event = Event.builder()
                 .time_initial(71)
                 .time_repeat(30)
