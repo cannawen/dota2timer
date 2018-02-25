@@ -31,7 +31,7 @@ public class Event implements Serializable {
 
     public boolean triggeredAt(int secondsElapsed) {
         boolean withinAcceptableStartRange = secondsElapsed >= time_initial - time_advance_notice;
-        boolean withinAcceptableEndRange = time_expire == NO_EXPIRY || secondsElapsed - time_advance_notice < time_expire;
+        boolean withinAcceptableEndRange = time_expire == NO_EXPIRY || secondsElapsed < time_expire;
         // A notice should be triggered when time is within acceptable range, and:
         // secondsElapsed == time_initial + time_repeat * N - time_advance_notice
         // where N is an integer number

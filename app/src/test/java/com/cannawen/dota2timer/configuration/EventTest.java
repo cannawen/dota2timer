@@ -71,4 +71,16 @@ public class EventTest {
         assertEquals(event.triggeredAt(199), true);
         assertEquals(event.triggeredAt(209), false);
     }
+
+    @Test
+    public void setting_pull_expiry() {
+        Event event = Event.builder()
+                .time_initial(71)
+                .time_repeat(30)
+                .time_expire(600)
+                .time_advance_notice(7)
+                .build();
+        assertEquals(event.triggeredAt(574), true);
+        assertEquals(event.triggeredAt(604), false);
+    }
 }
