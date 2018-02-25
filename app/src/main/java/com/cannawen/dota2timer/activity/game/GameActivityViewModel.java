@@ -1,12 +1,11 @@
 package com.cannawen.dota2timer.activity.game;
 
-import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 
@@ -18,13 +17,13 @@ public class GameActivityViewModel implements GameStateChangeListener {
     public void gameStateChanged(final GameState gameState) {
         switch (gameState.getState()) {
             case GameState.State.PLAYING: {
-                Configuration config = gameState.getConfiguration();
-                List<String> eventNames = new ArrayList<>();
-                for (Event event : config.getEvents()) {
-                    if (event.triggeredAt(gameState.getGameTime())) {
-                        eventNames.add(event.getName());
-                    }
-                }
+                List<String> eventNames = gameState
+                        .getConfiguration()
+                        .getEvents()
+                        .stream()
+                        .filter(event -> event.triggeredAt(gameState.getGameTime()))
+                        .map(Event::getName)
+                        .collect(Collectors.toList());
 
                 presenter.showPlayingGameView(timeString(gameState), eventNames);
                 break;
@@ -63,7 +62,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
     public interface GamePresenter {
         void showUnstartedGameView();
 
-        void showPlayingGameView(String time, List<String> events);
+        void showPlayingGameView(String time, List<String> eventStrings);
 
         void showPausedGameView(String time);
 

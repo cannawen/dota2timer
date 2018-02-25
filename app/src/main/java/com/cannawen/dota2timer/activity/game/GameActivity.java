@@ -3,7 +3,6 @@ package com.cannawen.dota2timer.activity.game;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -30,7 +29,7 @@ import butterknife.OnClick;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-public class GameActivity extends Activity implements  ConfigurationLoaderListener {
+public class GameActivity extends Activity implements ConfigurationLoaderListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
 
     private Game game;
@@ -132,19 +131,11 @@ public class GameActivity extends Activity implements  ConfigurationLoaderListen
         public void confirmEndGame() {
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setMessage(R.string.game_action_end_confirmation_message);
-            alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    endGame();
-                    dialog.dismiss();
-                }
+            alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
+                endGame();
+                dialog.dismiss();
             });
-            alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
             alert.show();
         }
     }
@@ -169,39 +160,26 @@ public class GameActivity extends Activity implements  ConfigurationLoaderListen
 
         @Override
         public void showUnstartedGameView() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    timeText.setText("");
-                    gameNotStartedView.setVisibility(View.VISIBLE);
-                    startButton.setText(R.string.game_action_start);
-                    gameStartedView.setVisibility(View.INVISIBLE);
-                }
+            runOnUiThread(() -> {
+                timeText.setText("");
+                gameNotStartedView.setVisibility(View.VISIBLE);
+                startButton.setText(R.string.game_action_start);
+                gameStartedView.setVisibility(View.INVISIBLE);
             });
         }
 
         @Override
-        public void showPlayingGameView(final String time, final List<String> events) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for (String eventString : events) {
-                        tts.speak(eventString, QUEUE_ADD, null, eventString);
-                    }
+        public void showPlayingGameView(final String time, final List<String> eventStrings) {
+            runOnUiThread(() -> {
+                eventStrings.forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
 
-                    configureStartedGameView(time, false);
-                }
+                configureStartedGameView(time, false);
             });
         }
 
         @Override
         public void showPausedGameView(final String time) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    configureStartedGameView(time, true);
-                }
-            });
+            runOnUiThread(() -> configureStartedGameView(time, true));
         }
 
         @Override
