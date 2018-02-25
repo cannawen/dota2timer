@@ -1,11 +1,12 @@
 package com.cannawen.dota2timer.activity.game;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 
@@ -17,10 +18,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
     public void gameStateChanged(final GameState gameState) {
         switch (gameState.getState()) {
             case GameState.State.PLAYING: {
-                List<String> eventNames = gameState
-                        .getConfiguration()
-                        .getEvents()
-                        .stream()
+                List<String> eventNames = Stream.of(gameState.getConfiguration().getEvents())
                         .filter(event -> event.triggeredAt(gameState.getGameTime()))
                         .map(Event::getName)
                         .collect(Collectors.toList());
