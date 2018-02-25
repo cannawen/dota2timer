@@ -9,6 +9,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class DotaGame extends GameState implements Game {
+    static final private int GAME_START_TIME = -75;
+
     protected GameStateChangeListener listener;
     private Timer timer;
 
@@ -54,7 +56,7 @@ public class DotaGame extends GameState implements Game {
     }
 
     private void initializeState() {
-        gameTime = -75;
+        gameTime = GAME_START_TIME;
         state = State.UNSTARTED;
 
         timer = new Timer();
