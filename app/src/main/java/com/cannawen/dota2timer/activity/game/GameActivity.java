@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
@@ -171,8 +172,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
         @Override
         public void showPlayingGameView(final String time, final List<String> eventStrings) {
             runOnUiThread(() -> {
-                eventStrings.forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
-
+                Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
                 configureStartedGameView(time, false);
             });
         }
