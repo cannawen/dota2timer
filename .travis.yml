@@ -34,6 +34,7 @@ before_script:
 script:
   - ./gradlew build connectedCheck # Creates .apk, runs lint, unit tests, and android tests
 after_success:
+  - scripts/hockeyappdeploy.sh
   - ./gradlew jacocoTestReport
   - pip install --user codecov
   - codecov
@@ -45,18 +46,5 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-  - provider: script
-    script: >
-            curl
-            -F "status=2"
-            -F "notify=0"
-            -F "notes=$TRAVIS_COMMIT_MESSAGE"
-            -F "notes_type=0"
-            -F "commit_sha=$TRAVIS_COMMIT"
-            -F "ipa=@app/build/outputs/apk/debug/app-debug.apk"
-            -H "X-HockeyAppToken:$HOCKEYAPP_TOKEN"
-            https://rink.hockeyapp.net/api/2/apps/upload
-    on:
-      branch: master
 notifications:
   email: false
