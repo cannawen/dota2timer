@@ -5,14 +5,10 @@ import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class DotaGame extends GameState implements Game {
     static final private int GAME_START_TIME = -75;
 
     protected GameStateChangeListener listener;
-    private Timer timer;
 
     public DotaGame(Configuration configuration, GameStateChangeListener listener) {
         super(configuration);
@@ -59,32 +55,13 @@ public class DotaGame extends GameState implements Game {
         gameTime = GAME_START_TIME;
         state = State.UNSTARTED;
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                tick();
-            }
-        }, 0, 1000);
-
         triggerListener();
     }
 
-    private void tick() {
-        switch (state) {
-            case State.PLAYING: {
-                gameTime++;
-                break;
-            }
-            case State.FINISHED: {
-                timer.cancel();
-                timer = null;
-                break;
-            }
-            case State.PAUSED:
-            case State.UNSTARTED:
-            default:
-                break;
+    @Override
+    public void tick() {
+        if (state == State.PLAYING) {
+            gameTime++;
         }
         triggerListener();
     }

@@ -21,6 +21,7 @@ import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.Configu
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.timer.SecondTimer;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
 
     private Game game;
+    private SecondTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
 
@@ -92,7 +94,14 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     }
 
     private void createNewGame(Configuration configuration) {
+        if (game != null) {
+            game.end();
+        }
+        if (timer != null) {
+            timer.cancel();
+        }
         game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter(this)));
+        timer = new SecondTimer(game);
     }
 
     class DotaGameInteractionHandler {
@@ -109,7 +118,6 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         }
 
         private void endGame() {
-            game.end();
             createNewGame(configuration);
         }
 
