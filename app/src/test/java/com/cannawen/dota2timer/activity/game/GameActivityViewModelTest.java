@@ -1,5 +1,7 @@
 package com.cannawen.dota2timer.activity.game;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.configuration.Event;
 import com.cannawen.dota2timer.game.interfaces.GameState;
@@ -17,6 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SmallTest
 public class GameActivityViewModelTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();

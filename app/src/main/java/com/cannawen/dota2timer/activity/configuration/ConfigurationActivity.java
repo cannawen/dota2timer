@@ -16,7 +16,7 @@ import butterknife.OnClick;
 
 public class ConfigurationActivity extends Activity {
 
-    private static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
+    static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
 
     @BindView(R.id.activity_configuration_recycler_view)
     RecyclerView recyclerView;

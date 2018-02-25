@@ -1,9 +1,12 @@
 package com.cannawen.dota2timer.configuration;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+@SmallTest
 public class EventTest {
     @Test
     public void setting_triggeredAt_basic() {

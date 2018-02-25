@@ -1,56 +1,54 @@
 package com.cannawen.dota2timer.activity.game;
 
-import android.support.annotation.IdRes;
-import android.support.test.annotation.UiThreadTest;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.activity.ActivityTestHelper;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.cannawen.dota2timer.activity.ActivityTestHelper.isGone;
+import static com.cannawen.dota2timer.activity.ActivityTestHelper.isVisible;
 
 @RunWith(AndroidJUnit4.class)
+@LargeTest
 public class GameActivityTest {
 
     @Rule
     public ActivityTestRule<GameActivity> rule = new ActivityTestRule<>(GameActivity.class);
 
     GameActivity activity;
-    ActivityTestHelper helper;
 
     @Before
     public void setUp() throws Exception {
         activity = rule.getActivity();
-        helper = new ActivityTestHelper(activity);
     }
 
     @Test
     public void onCreate_verifyViewInState_notStarted() throws Exception {
-        assertTrue(helper.isVisible(R.id.activity_game_container_not_started));
-        assertTrue(helper.isVisible(R.id.activity_game_button_start));
+        onView(withId(R.id.activity_game_container_not_started)).check(isVisible());
+        onView(withId(R.id.activity_game_button_start)).check(isVisible());
 
-        assertFalse(helper.isVisible(R.id.activity_game_container_started));
+        onView(withId(R.id.activity_game_container_started)).check(isGone());
     }
 
     @Test
-    @UiThreadTest
     public void onPressStart_verifyViewInState_started() throws Exception {
-        helper.click(R.id.activity_game_button_start);
+        onView(withId(R.id.activity_game_button_start)).perform(click());
 
-        assertFalse(helper.isVisible(R.id.activity_game_container_not_started));
+        onView(withId(R.id.activity_game_container_not_started)).check(isGone());
 
-        assertTrue(helper.isVisible(R.id.activity_game_button_time_increase));
-        assertTrue(helper.isVisible(R.id.activity_game_text_time));
-        assertTrue(helper.isVisible(R.id.activity_game_button_time_decrease));
-        assertTrue(helper.isVisible(R.id.activity_game_button_play_or_pause));
-        assertTrue(helper.isVisible(R.id.activity_game_button_end));
+        onView(withId(R.id.activity_game_button_time_increase)).check(isVisible());
+        onView(withId(R.id.activity_game_text_time)).check(isVisible());
+        onView(withId(R.id.activity_game_button_time_decrease)).check(isVisible());
+        onView(withId(R.id.activity_game_button_play_or_pause)).check(isVisible());
+        onView(withId(R.id.activity_game_button_end)).check(isVisible());
     }
 }

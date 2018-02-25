@@ -2,20 +2,57 @@ package com.cannawen.dota2timer.activity;
 
 import android.app.Activity;
 import android.support.annotation.IdRes;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
 import android.view.View;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+
 public class ActivityTestHelper {
-    private Activity activity;
 
-    public ActivityTestHelper(Activity activity) {
-        this.activity = activity;
+    public static ViewAssertion isVisible() {
+        return (view, noView) -> assertThat(view, new VisibilityMatcher(View.VISIBLE));
     }
 
-    public Boolean isVisible(@IdRes int id) {
-        return activity.findViewById(id).getVisibility() == View.VISIBLE;
+    public static ViewAssertion isGone() {
+        return (view, noView) -> assertThat(view, new VisibilityMatcher(View.GONE));
     }
 
-    public void click(@IdRes int id) {
-        activity.findViewById(id).callOnClick();
+    public static ViewAssertion isInvisible() {
+        return (view, noView) -> assertThat(view, new VisibilityMatcher(View.INVISIBLE));
     }
+
+    private static class VisibilityMatcher extends BaseMatcher<View> {
+
+        private int visibility;
+
+        public VisibilityMatcher(int visibility) {
+            this.visibility = visibility;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            String visibilityName;
+            if (visibility == View.GONE) visibilityName = "GONE";
+            else if (visibility == View.VISIBLE) visibilityName = "VISIBLE";
+            else visibilityName = "INVISIBLE";
+            description.appendText("View visibility must has equals " + visibilityName);
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            if (o == null) {
+                if (visibility == View.GONE || visibility == View.INVISIBLE) return true;
+                else if (visibility == View.VISIBLE) return false;
+            }
+
+            if (!(o instanceof View))
+                throw new IllegalArgumentException("Object must be instance of View. Object is instance of " + o);
+            return ((View) o).getVisibility() == visibility;
+        }
+    }
+
 }
