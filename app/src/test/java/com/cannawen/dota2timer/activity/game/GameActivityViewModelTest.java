@@ -24,11 +24,11 @@ public class GameActivityViewModelTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    GameActivityViewModel viewModel;
-
     GameActivityViewModel.GamePresenter presenter;
     GameState gameState;
     Configuration configuration;
+
+    GameActivityViewModel viewModel;
 
     @Before
     public void setUp() throws Exception {

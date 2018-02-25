@@ -14,8 +14,8 @@ public class DotaGame extends GameState implements Game {
     protected GameStateChangeListener listener;
     private Timer timer;
 
-    public DotaGame(Configuration config, GameStateChangeListener listener) {
-        super(config);
+    public DotaGame(Configuration configuration, GameStateChangeListener listener) {
+        super(configuration);
         this.listener = listener;
 
         initializeState();
