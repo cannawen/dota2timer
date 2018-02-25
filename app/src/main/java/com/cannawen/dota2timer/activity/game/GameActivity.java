@@ -2,6 +2,7 @@ package com.cannawen.dota2timer.activity.game;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,21 +30,8 @@ import butterknife.OnClick;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements  ConfigurationLoaderListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
-
-    @BindView(R.id.activity_game_container_not_started)
-    View gameNotStartedView;
-    @BindView(R.id.activity_game_button_start)
-    Button startButton;
-    @BindView(R.id.activity_game_container_started)
-    View gameStartedView;
-    @BindView(R.id.activity_game_text_time)
-    TextView timeText;
-    @BindView(R.id.activity_game_button_play_or_pause)
-    Button playPauseButton;
-    @BindView(R.id.activity_game_button_end)
-    Button resetButton;
 
     private Game game;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
@@ -53,23 +41,11 @@ public class GameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        ButterKnife.bind(this);
 
         tts = new TextToSpeech(getApplicationContext(), null);
 
-        LocalConfigurationLoader loader = new LocalConfigurationLoader(getApplicationContext());
-        loader.getConfiguration(new ConfigurationLoaderListener() {
-            @Override
-            public void onSuccess(Configuration configuration) {
-                GameActivity.this.configuration = configuration;
-                createNewGame(configuration);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                e.printStackTrace();
-            }
-        });
+        new LocalConfigurationLoader(getApplicationContext()).getConfiguration(this);
+        new DotaGameInteractionHandler(this);
     }
 
     @Override
@@ -104,56 +80,93 @@ public class GameActivity extends Activity {
         }
     }
 
-    @OnClick(R.id.activity_game_button_start)
-    public void startGame(View view) {
-        game.start();
-    }
-
-    private void endGame() {
-        game.end();
+    @Override
+    public void onSuccess(Configuration configuration) {
+        GameActivity.this.configuration = configuration;
         createNewGame(configuration);
     }
 
-    @OnClick(R.id.activity_game_button_play_or_pause)
-    public void pauseOrResume(View view) {
-        game.pauseOrResume();
-    }
-
-    @OnClick(R.id.activity_game_button_time_increase)
-    public void increaseTime(View view) {
-        game.increaseTime();
-    }
-
-    @OnClick(R.id.activity_game_button_time_decrease)
-    public void decreaseTime(View view) {
-        game.decreaseTime();
-    }
-
-    @OnClick(R.id.activity_game_button_end)
-    public void confirmEndGame(View view) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage(R.string.game_action_end_confirmation_message);
-        alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                endGame();
-                dialog.dismiss();
-            }
-        });
-        alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alert.show();
+    @Override
+    public void onFailure(Exception e) {
+        e.printStackTrace();
     }
 
     private void createNewGame(Configuration configuration) {
-        game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter()));
+        game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter(this)));
+    }
+
+    class DotaGameInteractionHandler {
+        final private Context context;
+
+        public DotaGameInteractionHandler(Activity activity) {
+            context = activity;
+            ButterKnife.bind(this, activity);
+        }
+
+        @OnClick(R.id.activity_game_button_start)
+        public void startGame() {
+            game.start();
+        }
+
+        private void endGame() {
+            game.end();
+            createNewGame(configuration);
+        }
+
+        @OnClick(R.id.activity_game_button_play_or_pause)
+        public void pauseOrResume() {
+            game.pauseOrResume();
+        }
+
+        @OnClick(R.id.activity_game_button_time_increase)
+        public void increaseTime() {
+            game.increaseTime();
+        }
+
+        @OnClick(R.id.activity_game_button_time_decrease)
+        public void decreaseTime() {
+            game.decreaseTime();
+        }
+
+        @OnClick(R.id.activity_game_button_end)
+        public void confirmEndGame() {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setMessage(R.string.game_action_end_confirmation_message);
+            alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    endGame();
+                    dialog.dismiss();
+                }
+            });
+            alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+        }
     }
 
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {
+        @BindView(R.id.activity_game_container_not_started)
+        View gameNotStartedView;
+        @BindView(R.id.activity_game_button_start)
+        Button startButton;
+        @BindView(R.id.activity_game_container_started)
+        View gameStartedView;
+        @BindView(R.id.activity_game_text_time)
+        TextView timeText;
+        @BindView(R.id.activity_game_button_play_or_pause)
+        Button playPauseButton;
+        @BindView(R.id.activity_game_button_end)
+        Button resetButton;
+
+        public DotaGamePresenter(Activity activity) {
+            ButterKnife.bind(this, activity);
+        }
+
         @Override
         public void showUnstartedGameView() {
             runOnUiThread(new Runnable() {
