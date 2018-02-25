@@ -51,6 +51,12 @@ public class DotaGame extends GameState implements Game {
         triggerListener();
     }
 
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+        triggerListener();
+    }
+
     private void initializeState() {
         gameTime = GAME_START_TIME;
         state = State.UNSTARTED;
