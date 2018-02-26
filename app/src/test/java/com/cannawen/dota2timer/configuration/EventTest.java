@@ -10,6 +10,19 @@ import static junit.framework.Assert.assertTrue;
 @SmallTest
 public class EventTest {
     @Test
+    public void event_triggeredAt_disabled() {
+        Event event = Event.builder()
+                .time_repeat(10)
+                .time_initial(0)
+                .time_advance_notice(0)
+                .time_expire(Event.NO_EXPIRY)
+                .enabled(false)
+                .build();
+        assertFalse(event.triggeredAt(10));
+        assertFalse(event.triggeredAt(20));
+    }
+
+    @Test
     public void event_triggeredAt_basicTest() {
         Event event = Event.builder()
                 .time_repeat(10)
