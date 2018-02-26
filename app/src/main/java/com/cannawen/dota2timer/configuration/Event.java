@@ -13,6 +13,7 @@ import lombok.Setter;
 @Builder
 public class Event implements Serializable {
     static int NO_EXPIRY = 0; // TODO test snakeYAML serialization with event object default values
+    static int NO_REPEAT = 0; // TODO test snakeYAML serialization with event object default values
 
     String name;
     int time_initial;
@@ -22,6 +23,10 @@ public class Event implements Serializable {
     boolean enabled;
 
     public boolean triggeredAt(int secondsElapsed) {
+        if (time_repeat == NO_REPEAT) {
+            return secondsElapsed == time_initial - time_advance_notice;
+        }
+
         boolean withinAcceptableStartRange = secondsElapsed >= time_initial - time_advance_notice;
         boolean withinAcceptableEndRange = time_expire == NO_EXPIRY || secondsElapsed < time_expire;
         // A notice should be triggered when time is within acceptable range, and:

@@ -43,6 +43,6 @@ Each event is described:
 | name | String | Yes | N/A | Text that will be spoken when notifying the user of an event |
 | time_initial | Integer | No | `0` | When the first event should be triggered (in seconds) |
 | time_expire | Integer | No | `NO_EXPIRY` | When to stop notifying user about this event (in seconds) |
-| time_repeat | Integer | No | `0` | How often this event should be triggered (in seconds) |
+| time_repeat | Integer | No | `NO_REPEAT` | How often this event should be triggered (in seconds) |
 | time_advance_notice | Integer | No | `0` | How much advance notice to give the user (in seconds) |
 | enabled | Boolean | No | `false` | Is this event enabled by default, or does it need to be manually enabled by the user? |

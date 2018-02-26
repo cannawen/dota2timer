@@ -25,6 +25,20 @@ public class EventTest {
     }
 
     @Test
+    public void event_triggeredAt_noRepeat() {
+        Event event = Event.builder()
+                .time_repeat(Event.NO_REPEAT)
+                .time_initial(60)
+                .time_advance_notice(5)
+                .enabled(true)
+                .build();
+
+        assertTrue(event.triggeredAt(55));
+        assertFalse(event.triggeredAt(60));
+        assertFalse(event.triggeredAt(115));
+    }
+
+    @Test
     public void event_triggeredAt_startNonZero() {
         Event event = Event.builder()
                 .time_repeat(10)
