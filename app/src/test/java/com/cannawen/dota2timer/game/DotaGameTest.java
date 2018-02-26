@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -34,7 +35,8 @@ public class DotaGameTest {
         listener = mock(GameStateChangeListener.class);
         configuration = mock(Configuration.class);
 
-        game = new DotaGame(configuration, listener);
+        game = new DotaGame(listener);
+        game.setConfiguration(configuration);
     }
 
     @Test
@@ -148,7 +150,7 @@ public class DotaGameTest {
 
     @Test
     public void ableToMixActions() {
-        verifyListenerCalledWith(State.UNSTARTED, -75);
+        verifyListenerCalledWith(State.UNSTARTED, -75, false);
 
         reset(listener);
         game.start();
@@ -198,10 +200,18 @@ public class DotaGameTest {
         GameState newState = captor.getValue();
         assertEquals(newConfiguration, newState.getConfiguration());
     }
-
+    
     private void verifyListenerCalledWith(@State int state, int time) {
+        verifyListenerCalledWith(state, time, true);
+    }
+
+    private void verifyListenerCalledWith(@State int state, int time, boolean onlyOnce) {
         ArgumentCaptor<GameState> captor = ArgumentCaptor.forClass(GameState.class);
-        verify(listener).gameStateChanged(captor.capture());
+        if (onlyOnce) {
+            verify(listener).gameStateChanged(captor.capture());
+        } else {
+            verify(listener, atLeastOnce()).gameStateChanged(captor.capture());
+        }
         GameState newState = captor.getValue();
 
         assertEquals(configuration, newState.getConfiguration());

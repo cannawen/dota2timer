@@ -10,8 +10,7 @@ public class DotaGame extends GameState implements Game {
 
     protected GameStateChangeListener listener;
 
-    public DotaGame(Configuration configuration, GameStateChangeListener listener) {
-        super(configuration);
+    public DotaGame(GameStateChangeListener listener) {
         this.listener = listener;
 
         initializeState();
@@ -27,6 +26,11 @@ public class DotaGame extends GameState implements Game {
     public void end() {
         state = State.FINISHED;
         triggerListener();
+    }
+
+    @Override
+    public void reset() {
+        initializeState();
     }
 
     @Override

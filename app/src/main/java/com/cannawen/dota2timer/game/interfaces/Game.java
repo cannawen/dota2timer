@@ -8,6 +8,8 @@ public interface Game extends TimerListener {
 
     void end();
 
+    void reset();
+
     void pauseOrResume();
 
     void increaseTime();

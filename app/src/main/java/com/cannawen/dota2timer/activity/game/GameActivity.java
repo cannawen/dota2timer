@@ -17,10 +17,12 @@ import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
 
 import java.util.List;
@@ -33,9 +35,9 @@ import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity implements ConfigurationLoaderStatusListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
-
+    DotaGamePresenter presenter;
     private Game game;
-    private SecondTimer timer;
+    private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
 
@@ -44,10 +46,26 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        tts = new TextToSpeech(getApplicationContext(), null);
+        setupExternalDependencies();
 
-        new LocalConfigurationLoader(getApplicationContext()).getConfiguration(this);
         new DotaGameInteractionHandler(this);
+    }
+
+    private void setupExternalDependencies() {
+        tts = new TextToSpeech(getApplicationContext(), null);
+        ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
+        presenter = new DotaGamePresenter(this);
+        Game game = new DotaGame(new GameActivityViewModel(presenter));
+        AbstractTimer timer = new SecondTimer();
+
+        initWithConfigurationLoader(configurationLoader, game, timer);
+    }
+
+    void initWithConfigurationLoader(ConfigurationLoader loader, Game game, AbstractTimer timer) {
+        this.game = game;
+        this.timer = timer;
+
+        loader.getConfiguration(this);
     }
 
     @Override
@@ -97,12 +115,10 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     private void createNewGame(Configuration configuration) {
         if (game != null) {
             game.end();
+            game.reset();
         }
-        if (timer != null) {
-            timer.cancel();
-        }
-        game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter(this)));
-        timer = new SecondTimer(game);
+        game.setConfiguration(configuration);
+        timer.setListener(game);
     }
 
     class DotaGameInteractionHandler {
