@@ -4,7 +4,8 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 @SmallTest
 public class EventTest {
@@ -17,10 +18,10 @@ public class EventTest {
                 .time_expire(Event.NO_EXPIRY)
                 .enabled(true)
                 .build();
-        assertEquals(false, event.triggeredAt(9));
-        assertEquals(true, event.triggeredAt(10));
-        assertEquals(true, event.triggeredAt(20));
-        assertEquals(false, event.triggeredAt(21));
+        assertFalse(event.triggeredAt(9));
+        assertTrue(event.triggeredAt(10));
+        assertTrue(event.triggeredAt(20));
+        assertFalse(event.triggeredAt(21));
     }
 
     @Test
@@ -32,10 +33,10 @@ public class EventTest {
                 .enabled(true)
                 .build();
 
-        assertEquals(false, event.triggeredAt(10));
-        assertEquals(true, event.triggeredAt(100));
-        assertEquals(true, event.triggeredAt(130));
-        assertEquals(false, event.triggeredAt(142));
+        assertFalse(event.triggeredAt(10));
+        assertTrue(event.triggeredAt(100));
+        assertTrue(event.triggeredAt(130));
+        assertFalse(event.triggeredAt(142));
     }
 
     @Test
@@ -47,9 +48,9 @@ public class EventTest {
                 .enabled(true)
                 .build();
 
-        assertEquals(true, event.triggeredAt(9));
-        assertEquals(false, event.triggeredAt(10));
-        assertEquals(true, event.triggeredAt(99));
+        assertTrue(event.triggeredAt(9));
+        assertFalse(event.triggeredAt(10));
+        assertTrue(event.triggeredAt(99));
     }
 
     @Test
@@ -59,11 +60,11 @@ public class EventTest {
                 .time_expire(100)
                 .enabled(true)
                 .build();
-        assertEquals(false, event.triggeredAt(9));
-        assertEquals(true, event.triggeredAt(10));
-        assertEquals(true, event.triggeredAt(60));
-        assertEquals(false, event.triggeredAt(100));
-        assertEquals(false, event.triggeredAt(110));
+        assertFalse(event.triggeredAt(9));
+        assertTrue(event.triggeredAt(10));
+        assertTrue(event.triggeredAt(60));
+        assertFalse(event.triggeredAt(100));
+        assertFalse(event.triggeredAt(110));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class EventTest {
                 .time_advance_notice(7)
                 .enabled(true)
                 .build();
-        assertEquals(true, event.triggeredAt(574));
-        assertEquals(false, event.triggeredAt(604));
+        assertTrue(event.triggeredAt(574));
+        assertFalse(event.triggeredAt(604));
     }
 }
