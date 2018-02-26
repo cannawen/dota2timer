@@ -13,13 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderListener;
+import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.timer.SecondTimer;
 
 import java.util.List;
 
@@ -29,10 +31,11 @@ import butterknife.OnClick;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
-public class GameActivity extends Activity implements ConfigurationLoaderListener {
+public class GameActivity extends Activity implements ConfigurationLoaderStatusListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
 
     private Game game;
+    private SecondTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
 
@@ -57,7 +60,8 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_game_edit_events: {
-                Intent intent = ConfigurationActivity.createActivityIntent(this, configuration);
+                Intent intent = new Intent(this, ConfigurationActivity.class);
+                ConfigurationActivity.configureIntent(intent, configuration);
                 startActivityForResult(intent, EDIT_CONFIGURATION_ACTIVITY_RESULT);
                 return true;
             }
@@ -80,18 +84,25 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
     }
 
     @Override
-    public void onSuccess(Configuration configuration) {
+    public void onLoadConfigurationSuccess(Configuration configuration) {
         GameActivity.this.configuration = configuration;
         createNewGame(configuration);
     }
 
     @Override
-    public void onFailure(Exception e) {
+    public void onLoadConfigurationFailure(Exception e) {
         e.printStackTrace();
     }
 
     private void createNewGame(Configuration configuration) {
+        if (game != null) {
+            game.end();
+        }
+        if (timer != null) {
+            timer.cancel();
+        }
         game = new DotaGame(configuration, new GameActivityViewModel(new DotaGamePresenter(this)));
+        timer = new SecondTimer(game);
     }
 
     class DotaGameInteractionHandler {
@@ -108,7 +119,6 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
         }
 
         private void endGame() {
-            game.end();
             createNewGame(configuration);
         }
 
@@ -164,15 +174,14 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
                 timeText.setText("");
                 gameNotStartedView.setVisibility(View.VISIBLE);
                 startButton.setText(R.string.game_action_start);
-                gameStartedView.setVisibility(View.INVISIBLE);
+                gameStartedView.setVisibility(View.GONE);
             });
         }
 
         @Override
         public void showPlayingGameView(final String time, final List<String> eventStrings) {
             runOnUiThread(() -> {
-                eventStrings.forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
-
+                Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
                 configureStartedGameView(time, false);
             });
         }
@@ -188,7 +197,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderListene
         }
 
         private void configureStartedGameView(String time, boolean paused) {
-            gameNotStartedView.setVisibility(View.INVISIBLE);
+            gameNotStartedView.setVisibility(View.GONE);
 
             gameStartedView.setVisibility(View.VISIBLE);
 

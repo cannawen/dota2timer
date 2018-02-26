@@ -10,7 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @RequiredArgsConstructor
 public abstract class GameState {
@@ -20,9 +19,8 @@ public abstract class GameState {
     @Getter
     protected int gameTime;
     @Getter
-    @Setter
     @NonNull
-    private Configuration configuration;
+    protected Configuration configuration;
 
     @IntDef({State.UNSTARTED, State.PLAYING, State.PAUSED, State.FINISHED})
     @Retention(RetentionPolicy.SOURCE)

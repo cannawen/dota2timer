@@ -23,8 +23,7 @@ public class ConfigurationActivity extends Activity {
 
     private Configuration configuration;
 
-    static public Intent createActivityIntent(Context context, Configuration configuration) {
-        Intent intent = new Intent(context, ConfigurationActivity.class);
+    static public Intent configureIntent(Intent intent, Configuration configuration) {
         intent.putExtra(INTENT_CONFIGURATION_KEY, configuration);
         return intent;
     }
