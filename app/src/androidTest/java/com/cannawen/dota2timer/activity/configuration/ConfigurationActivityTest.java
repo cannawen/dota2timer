@@ -42,7 +42,7 @@ public class ConfigurationActivityTest {
 
             InstrumentationRegistry.getTargetContext();
             Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.putExtra(ConfigurationActivity.INTENT_CONFIGURATION_KEY, configuration);
+            ConfigurationActivity.configureIntent(intent, configuration);
             return intent;
         }
     };

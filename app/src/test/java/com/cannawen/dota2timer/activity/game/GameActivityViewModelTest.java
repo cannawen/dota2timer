@@ -31,35 +31,44 @@ public class GameActivityViewModelTest {
     GameActivityViewModel viewModel;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         presenter = mock(GameActivityViewModel.GamePresenter.class);
         gameState = mock(GameState.class);
         configuration = mock(Configuration.class);
 
         when(gameState.getConfiguration()).thenReturn(configuration);
-        when(gameState.getGameTime()).thenReturn(0);
-        when(gameState.getState()).thenReturn(GameState.State.UNSTARTED);
 
         viewModel = new GameActivityViewModel(presenter);
     }
 
     @Test
-    public void gameUnstarted_shouldShowUnstartedGameView() throws Exception {
+    public void gameUnstarted_shouldShowUnstartedGameView() {
+        when(gameState.getState()).thenReturn(GameState.State.UNSTARTED);
+
         viewModel.gameStateChanged(gameState);
         verify(presenter).showUnstartedGameView();
     }
 
     @Test
-    public void gamePlaying_showPlayingGameView_noEvents() throws Exception {
-        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
+    public void gamePlaying_showPlayingGameView_noEvents() {
         when(gameState.getGameTime()).thenReturn(3601);
+        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
         verify(presenter).showPlayingGameView("01:00:01", Collections.emptyList());
     }
 
     @Test
-    public void gamePlaying_showPlayingGameView_eventTriggered() throws Exception {
+    public void gamePlaying_showPlayingGameView_noEvents_negativeTime() {
+        when(gameState.getGameTime()).thenReturn(-1);
+        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
+
+        viewModel.gameStateChanged(gameState);
+        verify(presenter).showPlayingGameView("-00:00:01", Collections.emptyList());
+    }
+
+    @Test
+    public void gamePlaying_showPlayingGameView_eventTriggered() {
         Event triggeredEvent_A = mock(Event.class);
         when(triggeredEvent_A.getName()).thenReturn("A");
         when(triggeredEvent_A.triggeredAt(70)).thenReturn(true);
@@ -79,15 +88,16 @@ public class GameActivityViewModelTest {
                 triggeredEvent_B
         ));
 
-        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
         when(gameState.getGameTime()).thenReturn(70);
+        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
         verify(presenter).showPlayingGameView("00:01:10", Arrays.asList("A", "B"));
     }
 
     @Test
-    public void gamePaused_showPausedGameView() throws Exception {
+    public void gamePaused_showPausedGameView() {
+        when(gameState.getGameTime()).thenReturn(0);
         when(gameState.getState()).thenReturn(GameState.State.PAUSED);
 
         viewModel.gameStateChanged(gameState);
@@ -95,16 +105,16 @@ public class GameActivityViewModelTest {
     }
 
     @Test
-    public void gamePaused_showPausedGameView_negativeTime() throws Exception {
-        when(gameState.getState()).thenReturn(GameState.State.PAUSED);
+    public void gamePaused_showPausedGameView_negativeTime() {
         when(gameState.getGameTime()).thenReturn(-75);
+        when(gameState.getState()).thenReturn(GameState.State.PAUSED);
 
         viewModel.gameStateChanged(gameState);
         verify(presenter).showPausedGameView("-00:01:15");
     }
 
     @Test
-    public void gameFinished_showFinishedGameView() throws Exception {
+    public void gameFinished_showFinishedGameView() {
         when(gameState.getState()).thenReturn(GameState.State.FINISHED);
 
         viewModel.gameStateChanged(gameState);

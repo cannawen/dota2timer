@@ -16,15 +16,14 @@ import butterknife.OnClick;
 
 public class ConfigurationActivity extends Activity {
 
-    static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
+    private static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
 
     @BindView(R.id.activity_configuration_recycler_view)
     RecyclerView recyclerView;
 
     private Configuration configuration;
 
-    static public Intent createActivityIntent(Context context, Configuration configuration) {
-        Intent intent = new Intent(context, ConfigurationActivity.class);
+    static public Intent configureIntent(Intent intent, Configuration configuration) {
         intent.putExtra(INTENT_CONFIGURATION_KEY, configuration);
         return intent;
     }

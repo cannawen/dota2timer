@@ -60,7 +60,8 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_game_edit_events: {
-                Intent intent = ConfigurationActivity.createActivityIntent(this, configuration);
+                Intent intent = new Intent(this, ConfigurationActivity.class);
+                ConfigurationActivity.configureIntent(intent, configuration);
                 startActivityForResult(intent, EDIT_CONFIGURATION_ACTIVITY_RESULT);
                 return true;
             }

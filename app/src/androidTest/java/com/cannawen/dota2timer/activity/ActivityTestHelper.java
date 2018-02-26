@@ -15,7 +15,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 public class ActivityTestHelper {
-
     public static ViewAssertion isVisible() {
         return (view, noView) -> assertThat(view, new VisibilityMatcher(View.VISIBLE));
     }
@@ -61,7 +60,6 @@ public class ActivityTestHelper {
     }
 
     private static class VisibilityMatcher extends BaseMatcher<View> {
-
         private int visibility;
 
         public VisibilityMatcher(int visibility) {

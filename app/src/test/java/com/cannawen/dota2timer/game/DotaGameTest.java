@@ -47,16 +47,15 @@ public class DotaGameTest {
     public void onStart_shouldUpdateListener() {
         reset(listener);
         game.start();
-
         verifyListenerCalledWith(State.PLAYING, -75);
     }
 
     @Test
     public void onPause_shouldUpdateListener() {
         game.start();
+
         reset(listener);
         game.pauseOrResume();
-
         verifyListenerCalledWith(State.PAUSED, -75);
     }
 
@@ -64,39 +63,37 @@ public class DotaGameTest {
     public void onResume_shouldUpdateListener() {
         game.start();
         game.pauseOrResume();
+
         reset(listener);
         game.pauseOrResume();
-
         verifyListenerCalledWith(State.PLAYING, -75);
     }
 
     @Test
     public void onEnd_shouldUpdateListener() {
         game.start();
-        game.pauseOrResume();
-        game.pauseOrResume();
+
         reset(listener);
         game.end();
-
         verifyListenerCalledWith(State.FINISHED, -75);
     }
 
     @Test
     public void onTick_playing_shouldUpdateListener_updateTime() {
         game.start();
+
         reset(listener);
         game.tick();
-
         verifyListenerCalledWith(State.PLAYING, -74);
     }
 
     @Test
-    public void onTick_paused_shouldUpdateListener() {
+    public void onTick_paused_shouldUpdateListener_sameTime() {
         game.start();
         game.pauseOrResume();
+
         reset(listener);
         game.tick();
-
         verifyListenerCalledWith(State.PAUSED, -75);
     }
 
@@ -105,18 +102,18 @@ public class DotaGameTest {
         game.start();
         game.pauseOrResume();
         game.pauseOrResume();
+
         reset(listener);
         game.tick();
-
         verifyListenerCalledWith(State.PLAYING, -74);
     }
 
     @Test
     public void onIncreaseTime_playing_shouldUpdateListener() {
         game.start();
+
         reset(listener);
         game.increaseTime();
-
         verifyListenerCalledWith(State.PLAYING, -74);
     }
 
@@ -124,18 +121,18 @@ public class DotaGameTest {
     public void onIncreaseTime_paused_shouldUpdateListener() {
         game.start();
         game.pauseOrResume();
+
         reset(listener);
         game.increaseTime();
-
         verifyListenerCalledWith(State.PAUSED, -74);
     }
 
     @Test
     public void onDecreaseTime_playing_shouldUpdateListener() {
         game.start();
+
         reset(listener);
         game.decreaseTime();
-
         verifyListenerCalledWith(State.PLAYING, -76);
     }
 
@@ -143,9 +140,9 @@ public class DotaGameTest {
     public void onDecreaseTime_paused_shouldUpdateListener() {
         game.start();
         game.pauseOrResume();
+        
         reset(listener);
         game.decreaseTime();
-
         verifyListenerCalledWith(State.PAUSED, -76);
     }
 
