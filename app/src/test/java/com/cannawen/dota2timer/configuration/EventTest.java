@@ -9,66 +9,73 @@ import static org.junit.Assert.assertEquals;
 @SmallTest
 public class EventTest {
     @Test
-    public void setting_triggeredAt_basic() {
+    public void event_triggeredAt_basicTest() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_initial(0)
                 .time_advance_notice(0)
                 .time_expire(Event.NO_EXPIRY)
+                .enabled(true)
                 .build();
-        assertEquals(event.triggeredAt(9), false);
-        assertEquals(event.triggeredAt(10), true);
-        assertEquals(event.triggeredAt(20), true);
-        assertEquals(event.triggeredAt(21), false);
+        assertEquals(false, event.triggeredAt(9));
+        assertEquals(true, event.triggeredAt(10));
+        assertEquals(true, event.triggeredAt(20));
+        assertEquals(false, event.triggeredAt(21));
     }
 
     @Test
-    public void setting_triggeredAt_startNonZero() {
+    public void event_triggeredAt_startNonZero() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_initial(100)
+                .time_expire(Event.NO_EXPIRY)
+                .enabled(true)
                 .build();
 
-        assertEquals(event.triggeredAt(10), false);
-        assertEquals(event.triggeredAt(100), true);
-        assertEquals(event.triggeredAt(130), true);
-        assertEquals(event.triggeredAt(142), false);
+        assertEquals(false, event.triggeredAt(10));
+        assertEquals(true, event.triggeredAt(100));
+        assertEquals(true, event.triggeredAt(130));
+        assertEquals(false, event.triggeredAt(142));
     }
 
     @Test
-    public void setting_triggeredAt_advanceNotice() {
+    public void event_triggeredAt_advanceNotice() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_advance_notice(1)
+                .time_expire(Event.NO_EXPIRY)
+                .enabled(true)
                 .build();
 
-        assertEquals(event.triggeredAt(9), true);
-        assertEquals(event.triggeredAt(10), false);
-        assertEquals(event.triggeredAt(99), true);
+        assertEquals(true, event.triggeredAt(9));
+        assertEquals(false, event.triggeredAt(10));
+        assertEquals(true, event.triggeredAt(99));
     }
 
     @Test
-    public void setting_triggeredAt_expiry() {
+    public void event_triggeredAt_expiry() {
         Event event = Event.builder()
                 .time_repeat(10)
                 .time_expire(100)
+                .enabled(true)
                 .build();
-        assertEquals(event.triggeredAt(9), false);
-        assertEquals(event.triggeredAt(10), true);
-        assertEquals(event.triggeredAt(60), true);
-        assertEquals(event.triggeredAt(100), false);
-        assertEquals(event.triggeredAt(110), false);
+        assertEquals(false, event.triggeredAt(9));
+        assertEquals(true, event.triggeredAt(10));
+        assertEquals(true, event.triggeredAt(60));
+        assertEquals(false, event.triggeredAt(100));
+        assertEquals(false, event.triggeredAt(110));
     }
 
     @Test
-    public void setting_triggeredAt_allOptions() {
+    public void event_triggeredAt_allOptions() {
         Event event = Event.builder()
                 .time_initial(71)
                 .time_repeat(30)
                 .time_expire(600)
                 .time_advance_notice(7)
+                .enabled(true)
                 .build();
-        assertEquals(event.triggeredAt(574), true);
-        assertEquals(event.triggeredAt(604), false);
+        assertEquals(true, event.triggeredAt(574));
+        assertEquals(false, event.triggeredAt(604));
     }
 }

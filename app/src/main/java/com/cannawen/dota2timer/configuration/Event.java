@@ -10,24 +10,16 @@ import lombok.Setter;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Event implements Serializable {
-    static int NO_EXPIRY = 0;
+    static int NO_EXPIRY = 0; // TODO test snakeYAML serialization with event object default values
 
-    @Builder.Default
-    String name = "";
-    @Builder.Default
-    int time_initial = 0;
-    @Builder.Default
-    int time_repeat = 0;
-    @Builder.Default
-    int time_advance_notice = 0;
-    @Builder.Default
-    int time_expire = NO_EXPIRY;
-    @Builder.Default
-    @Setter
-    boolean enabled = true;
+    String name;
+    int time_initial;
+    int time_repeat;
+    int time_advance_notice;
+    int time_expire;
+    boolean enabled;
 
     public boolean triggeredAt(int secondsElapsed) {
         boolean withinAcceptableStartRange = secondsElapsed >= time_initial - time_advance_notice;
