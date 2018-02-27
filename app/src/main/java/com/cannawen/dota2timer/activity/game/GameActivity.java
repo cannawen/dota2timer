@@ -58,10 +58,10 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         Game game = new DotaGame(new GameActivityViewModel(presenter));
         AbstractTimer timer = new SecondTimer();
 
-        initWithConfigurationLoader(configurationLoader, game, timer);
+        initWithDependencies(configurationLoader, game, timer);
     }
 
-    void initWithConfigurationLoader(ConfigurationLoader loader, Game game, AbstractTimer timer) {
+    void initWithDependencies(ConfigurationLoader loader, Game game, AbstractTimer timer) {
         this.game = game;
         this.timer = timer;
 

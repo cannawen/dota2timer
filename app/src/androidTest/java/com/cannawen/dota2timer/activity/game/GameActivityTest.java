@@ -48,7 +48,7 @@ public class GameActivityTest {
         game = mock(Game.class);
         timer = mock(AbstractTimer.class);
 
-        activity.initWithConfigurationLoader(configurationLoader, game, timer);
+        activity.initWithDependencies(configurationLoader, game, timer);
     }
 
     @Test
