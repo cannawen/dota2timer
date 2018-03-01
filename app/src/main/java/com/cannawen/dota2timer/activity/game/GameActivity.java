@@ -24,6 +24,7 @@ import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
+import com.cannawen.dota2timer.timer.TimerListener;
 
 import java.util.List;
 
@@ -186,25 +187,21 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
 
         @Override
         public void showUnstartedGameView() {
-            runOnUiThread(() -> {
-                timeText.setText("");
-                gameNotStartedView.setVisibility(View.VISIBLE);
-                startButton.setText(R.string.game_action_start);
-                gameStartedView.setVisibility(View.GONE);
-            });
+            timeText.setText("");
+            gameNotStartedView.setVisibility(View.VISIBLE);
+            startButton.setText(R.string.game_action_start);
+            gameStartedView.setVisibility(View.GONE);
         }
 
         @Override
         public void showPlayingGameView(final String time, final List<String> eventStrings) {
-            runOnUiThread(() -> {
-                Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
-                configureStartedGameView(time, false);
-            });
+            Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
+            configureStartedGameView(time, false);
         }
 
         @Override
         public void showPausedGameView(final String time) {
-            runOnUiThread(() -> configureStartedGameView(time, true));
+            configureStartedGameView(time, true);
         }
 
         @Override

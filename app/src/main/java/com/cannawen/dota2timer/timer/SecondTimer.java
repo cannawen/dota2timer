@@ -1,10 +1,14 @@
 package com.cannawen.dota2timer.timer;
 
+import android.os.Handler;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class SecondTimer extends AbstractTimer {
     private Timer timer;
+
+    private Handler handler = new Handler();
 
     public SecondTimer() {
         this.timer = new Timer();
@@ -13,7 +17,7 @@ public class SecondTimer extends AbstractTimer {
             @Override
             public void run() {
                 if (listener != null) {
-                    listener.tick();
+                    handler.post(() -> listener.tick());
                 }
             }
         }, 0, 1000);
