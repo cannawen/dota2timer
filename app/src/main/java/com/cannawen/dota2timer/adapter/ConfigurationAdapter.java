@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity.configuration;
+package com.cannawen.dota2timer.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +21,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
     private Context context;
     private Configuration configuration;
+    private boolean detailed;
 
     @Override
     public ConfigurationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,9 +58,15 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
         void configureWithEvent(Event event, int position) {
             nameText.setText(event.getName());
-            initialText.setText(String.valueOf(event.getTime_initial()));
-            periodText.setText(String.valueOf(event.getTime_repeat()));
-            noticeText.setText(String.valueOf(event.getTime_advance_notice()));
+            if (detailed) {
+                initialText.setText(String.valueOf(event.getTime_initial()));
+                periodText.setText(String.valueOf(event.getTime_repeat()));
+                noticeText.setText(String.valueOf(event.getTime_advance_notice()));
+            } else {
+                initialText.setVisibility(View.GONE);
+                periodText.setVisibility(View.GONE);
+                noticeText.setVisibility(View.GONE);
+            }
 
             enabledCheckBox.setChecked(event.isEnabled());
             enabledCheckBox.setTag(position);

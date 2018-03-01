@@ -1,7 +1,6 @@
 package com.cannawen.dota2timer.activity.configuration;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +41,7 @@ public class ConfigurationActivity extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         configuration = deserializeConfigurationFromIntent(getIntent());
-        ConfigurationAdapter adapter = new ConfigurationAdapter(getApplicationContext(), configuration);
+        ConfigurationAdapter adapter = new ConfigurationAdapter(getApplicationContext(), configuration, true);
         recyclerView.setAdapter(adapter);
     }
 

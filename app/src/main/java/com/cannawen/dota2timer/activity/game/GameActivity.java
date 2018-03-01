@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.StringRes;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
@@ -118,6 +121,11 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             game.end();
             game.reset();
         }
+
+        RecyclerView recyclerView = findViewById(R.id.activity_game_recycler_view_settings);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerView.setAdapter(new ConfigurationAdapter(getApplicationContext(), configuration, false));
+
         game.setConfiguration(configuration);
         timer.setListener(game);
     }
@@ -176,6 +184,8 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         View gameStartedView;
         @BindView(R.id.activity_game_text_time)
         TextView timeText;
+        @BindView(R.id.activty_game_settings_title)
+        TextView settingsTitle;
         @BindView(R.id.activity_game_button_play_or_pause)
         Button playPauseButton;
         @BindView(R.id.activity_game_button_end)
@@ -215,6 +225,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             gameStartedView.setVisibility(View.VISIBLE);
 
             timeText.setText(time);
+            settingsTitle.setText(R.string.game_title_settings);
             @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
             playPauseButton.setText(buttonStringRes);
             resetButton.setText(R.string.game_action_end);

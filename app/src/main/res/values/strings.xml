@@ -12,4 +12,5 @@
     <string name="configuration_title_enabled">Enabled</string>
     <string name="configuration_action_cancel">Cancel</string>
     <string name="configuration_action_save">Save</string>
+    <string name="game_title_settings">Settings</string>
 </resources>
