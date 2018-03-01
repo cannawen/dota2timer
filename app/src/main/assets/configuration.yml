@@ -14,7 +14,7 @@ events:
     time_expire: 600
     time_repeat: 30
     time_advance_notice: 7
-    enabled: false
+    enabled: true
   - name: "Ward"
     time_initial: 150
     time_repeat: 150
