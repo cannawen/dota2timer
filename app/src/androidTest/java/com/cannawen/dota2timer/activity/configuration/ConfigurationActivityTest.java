@@ -57,7 +57,6 @@ public class ConfigurationActivityTest {
     @Test
     public void onCreate_shouldShowAllUIElements() throws Exception {
         onView(withId(R.id.activity_configuration_description_event)).check(isVisible());
-        onView(withId(R.id.activity_configuration_description_enabled)).check(isVisible());
         onView(withId(R.id.activity_configuration_recycler_view)).check(isVisible());
         onView(withId(R.id.activity_configuration_cancel)).check(isVisible());
         onView(withId(R.id.activity_configuration_save)).check(isVisible());
