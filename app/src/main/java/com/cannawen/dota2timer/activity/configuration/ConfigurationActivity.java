@@ -7,8 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
+import com.cannawen.dota2timer.configuration.Configuration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -6,7 +6,7 @@ import com.cannawen.dota2timer.game.interfaces.GameState;
 import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
 
 public class DotaGame extends GameState implements Game {
-    static final private int GAME_START_TIME = -75;
+    static final private int GAME_START_TIME = 598;
 
     protected GameStateChangeListener listener;
 

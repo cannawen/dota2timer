@@ -23,6 +23,11 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
     private Configuration configuration;
     private boolean detailed;
 
+    public void updateConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ConfigurationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.cell_edit_event, parent, false);

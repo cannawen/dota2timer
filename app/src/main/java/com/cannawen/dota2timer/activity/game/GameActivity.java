@@ -1,49 +1,35 @@
 package com.cannawen.dota2timer.activity.game;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.support.annotation.StringRes;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
 import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
 import com.cannawen.dota2timer.game.DotaGame;
+import com.cannawen.dota2timer.game.fragment.StartedGameFragment;
+import com.cannawen.dota2timer.game.fragment.UnstartedGameFragment;
 import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
-import com.cannawen.dota2timer.timer.TimerListener;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import static android.speech.tts.TextToSpeech.QUEUE_ADD;
-
-public class GameActivity extends Activity implements ConfigurationLoaderStatusListener {
+public class GameActivity extends Activity implements ConfigurationLoader.ConfigurationLoaderStatusListener, StartedGameFragment.FragmentListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
     DotaGamePresenter presenter;
     private Game game;
-    private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
-    private TextToSpeech tts;
+
+    private UnstartedGameFragment unstartedGameFragment;
+    private StartedGameFragment startedGameFragment;
+    private AbstractTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +37,11 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         setContentView(R.layout.activity_game);
 
         setupExternalDependencies();
-
-        new DotaGameInteractionHandler(this);
     }
 
     private void setupExternalDependencies() {
-        tts = new TextToSpeech(getApplicationContext(), null);
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
-        presenter = new DotaGamePresenter(this);
+        presenter = new DotaGamePresenter();
         Game game = new DotaGame(new GameActivityViewModel(presenter));
         AbstractTimer timer = new SecondTimer();
 
@@ -102,13 +85,25 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
             configuration = ConfigurationActivity.deserializeConfigurationFromIntent(data);
             game.setConfiguration(configuration);
+            startedGameFragment.updateConfiguration(configuration);
         }
     }
 
     @Override
     public void onLoadConfigurationSuccess(Configuration configuration) {
         GameActivity.this.configuration = configuration;
-        createNewGame(configuration);
+        createNewGame();
+    }
+
+    @Override
+    public void createNewGame() {
+        if (game != null) {
+            game.end();
+            game.reset();
+        }
+
+        game.setConfiguration(configuration);
+        timer.setListener(game);
     }
 
     @Override
@@ -116,119 +111,44 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         e.printStackTrace();
     }
 
-    private void createNewGame(Configuration configuration) {
-        if (game != null) {
-            game.end();
-            game.reset();
-        }
-
-        RecyclerView recyclerView = findViewById(R.id.activity_game_recycler_view_settings);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-        recyclerView.setAdapter(new ConfigurationAdapter(getApplicationContext(), configuration, false));
-
-        game.setConfiguration(configuration);
-        timer.setListener(game);
-    }
-
-    class DotaGameInteractionHandler {
-        final private Context context;
-
-        public DotaGameInteractionHandler(Activity activity) {
-            context = activity;
-            ButterKnife.bind(this, activity);
-        }
-
-        @OnClick(R.id.activity_game_button_start)
-        public void startGame() {
-            game.start();
-        }
-
-        private void endGame() {
-            createNewGame(configuration);
-        }
-
-        @OnClick(R.id.activity_game_button_play_or_pause)
-        public void pauseOrResume() {
-            game.pauseOrResume();
-        }
-
-        @OnClick(R.id.activity_game_button_time_increase)
-        public void increaseTime() {
-            game.increaseTime();
-        }
-
-        @OnClick(R.id.activity_game_button_time_decrease)
-        public void decreaseTime() {
-            game.decreaseTime();
-        }
-
-        @OnClick(R.id.activity_game_button_end)
-        public void confirmEndGame() {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-            alert.setMessage(R.string.game_action_end_confirmation_message);
-            alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
-                endGame();
-                dialog.dismiss();
-            });
-            alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
-            alert.show();
-        }
-    }
-
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {
-        @BindView(R.id.activity_game_container_not_started)
-        View gameNotStartedView;
-        @BindView(R.id.activity_game_button_start)
-        Button startButton;
-        @BindView(R.id.activity_game_container_started)
-        View gameStartedView;
-        @BindView(R.id.activity_game_text_time)
-        TextView timeText;
-        @BindView(R.id.activty_game_settings_title)
-        TextView settingsTitle;
-        @BindView(R.id.activity_game_button_play_or_pause)
-        Button playPauseButton;
-        @BindView(R.id.activity_game_button_end)
-        Button resetButton;
-
-        public DotaGamePresenter(Activity activity) {
-            ButterKnife.bind(this, activity);
-        }
-
         @Override
         public void showUnstartedGameView() {
-            timeText.setText("");
-            gameNotStartedView.setVisibility(View.VISIBLE);
-            startButton.setText(R.string.game_action_start);
-            gameStartedView.setVisibility(View.GONE);
+            if (unstartedGameFragment == null) {
+                unstartedGameFragment = new UnstartedGameFragment();
+            }
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            unstartedGameFragment.configure(game);
+            ft.replace(R.id.game_activity_fragment_container, unstartedGameFragment);
+            ft.commitAllowingStateLoss();
         }
 
         @Override
         public void showPlayingGameView(final String time, final List<String> eventStrings) {
-            Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
-            configureStartedGameView(time, false);
+            if (startedGameFragment == null) {
+                startedGameFragment = new StartedGameFragment();
+            }
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            startedGameFragment.configure(configuration, game, GameActivity.this,
+                    time, eventStrings, false);
+            ft.replace(R.id.game_activity_fragment_container, startedGameFragment);
+            ft.commitAllowingStateLoss();
         }
 
         @Override
         public void showPausedGameView(final String time) {
-            configureStartedGameView(time, true);
+            if (startedGameFragment == null) {
+                startedGameFragment = new StartedGameFragment();
+            }
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            startedGameFragment.configure(configuration, game, GameActivity.this, time, null, true);
+            ft.replace(R.id.game_activity_fragment_container, startedGameFragment);
+            ft.commitAllowingStateLoss();
         }
 
         @Override
         public void showFinishedGameView() {
             showUnstartedGameView();
-        }
-
-        private void configureStartedGameView(String time, boolean paused) {
-            gameNotStartedView.setVisibility(View.GONE);
-
-            gameStartedView.setVisibility(View.VISIBLE);
-
-            timeText.setText(time);
-            settingsTitle.setText(R.string.game_title_settings);
-            @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
-            playPauseButton.setText(buttonStringRes);
-            resetButton.setText(R.string.game_action_end);
         }
     }
 }
