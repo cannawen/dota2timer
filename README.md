@@ -8,7 +8,7 @@ Dota 2 coaching app on Android, to remind you of game timings (runes, etc)
 
 Beta builds are uploaded to [github](https://github.com/cannawen/dota2timer/releases), where you can download the .apk onto your Android device (5.0+)
 
-Alternatively, you can download Android Studio and make your own build whenever you want :)
+Alternatively, you can download Android Studio and make a customized build :)
 
 ## Contribute
 
