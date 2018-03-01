@@ -34,7 +34,6 @@ before_script:
 script:
   - ./gradlew build connectedCheck # Creates .apk, runs lint, unit tests, and android tests
 after_success:
-  - scripts/hockeyappdeploy.sh
   - ./gradlew jacocoTestReport
   - pip install --user codecov
   - codecov
@@ -45,6 +44,6 @@ deploy:
     file: "app/build/outputs/apk/debug/app-debug.apk"
     skip_cleanup: true
     on:
-      tags: true
+      branch: master
 notifications:
   email: false
