@@ -4,6 +4,8 @@ import com.cannawen.dota2timer.configuration.Configuration;
 import com.cannawen.dota2timer.timer.TimerListener;
 
 public interface Game extends TimerListener {
+    boolean hasStarted();
+
     void start();
 
     void end();

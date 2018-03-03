@@ -17,6 +17,11 @@ public class DotaGame extends GameState implements Game {
     }
 
     @Override
+    public boolean hasStarted() {
+        return state != State.UNSTARTED;
+    }
+
+    @Override
     public void start() {
         state = State.PLAYING;
         triggerListener();

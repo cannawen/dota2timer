@@ -27,7 +27,6 @@ import com.cannawen.dota2timer.game.DotaGame;
 import com.cannawen.dota2timer.game.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
-import com.cannawen.dota2timer.timer.TimerListener;
 
 import java.util.List;
 
@@ -138,11 +137,6 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             ButterKnife.bind(this, activity);
         }
 
-        @OnClick(R.id.activity_game_button_start)
-        public void startGame() {
-            game.start();
-        }
-
         private void endGame() {
             createNewGame(configuration);
         }
@@ -162,45 +156,40 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             game.decreaseTime();
         }
 
-        @OnClick(R.id.activity_game_button_end)
+        @OnClick(R.id.activity_game_button_start_or_end)
         public void confirmEndGame() {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-            alert.setMessage(R.string.game_action_end_confirmation_message);
-            alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
-                endGame();
-                dialog.dismiss();
-            });
-            alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
-            alert.show();
+            if (game.hasStarted()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(R.string.game_action_end_confirmation_message);
+                alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
+                    endGame();
+                    dialog.dismiss();
+                });
+                alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
+                alert.show();
+            } else {
+                game.start();
+            }
         }
     }
 
     class DotaGamePresenter implements GameActivityViewModel.GamePresenter {
-        @BindView(R.id.activity_game_container_not_started)
-        View gameNotStartedView;
-        @BindView(R.id.activity_game_button_start)
-        Button startButton;
-        @BindView(R.id.activity_game_container_started)
-        View gameStartedView;
         @BindView(R.id.activity_game_text_time)
         TextView timeText;
-        @BindView(R.id.activty_game_settings_title)
-        TextView settingsTitle;
         @BindView(R.id.activity_game_button_play_or_pause)
         Button playPauseButton;
-        @BindView(R.id.activity_game_button_end)
-        Button resetButton;
+        @BindView(R.id.activity_game_button_start_or_end)
+        Button startEndButton;
 
         public DotaGamePresenter(Activity activity) {
             ButterKnife.bind(this, activity);
         }
 
         @Override
-        public void showUnstartedGameView() {
-            timeText.setText("");
-            gameNotStartedView.setVisibility(View.VISIBLE);
-            startButton.setText(R.string.game_action_start);
-            gameStartedView.setVisibility(View.GONE);
+        public void showUnstartedGameView(String time) {
+            timeText.setText(time);
+            playPauseButton.setVisibility(View.INVISIBLE);
+            startEndButton.setText(R.string.game_action_start);
         }
 
         @Override
@@ -215,20 +204,16 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         }
 
         @Override
-        public void showFinishedGameView() {
-            showUnstartedGameView();
+        public void showFinishedGameView(String time) {
+            showUnstartedGameView(time);
         }
 
         private void configureStartedGameView(String time, boolean paused) {
-            gameNotStartedView.setVisibility(View.GONE);
-
-            gameStartedView.setVisibility(View.VISIBLE);
-
             timeText.setText(time);
-            settingsTitle.setText(R.string.game_title_settings);
             @StringRes int buttonStringRes = paused ? R.string.game_action_resume : R.string.game_action_pause;
             playPauseButton.setText(buttonStringRes);
-            resetButton.setText(R.string.game_action_end);
+            startEndButton.setText(R.string.game_action_end);
+            playPauseButton.setVisibility(View.VISIBLE);
         }
     }
 }

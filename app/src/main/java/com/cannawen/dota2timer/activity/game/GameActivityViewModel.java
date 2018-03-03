@@ -31,11 +31,11 @@ public class GameActivityViewModel implements GameStateChangeListener {
                 break;
             }
             case GameState.State.FINISHED: {
-                presenter.showFinishedGameView();
+                presenter.showFinishedGameView(timeString(gameState));
             }
             case GameState.State.UNSTARTED:
             default: {
-                presenter.showUnstartedGameView();
+                presenter.showUnstartedGameView(timeString(gameState));
                 break;
             }
         }
@@ -58,12 +58,12 @@ public class GameActivityViewModel implements GameStateChangeListener {
     }
 
     public interface GamePresenter {
-        void showUnstartedGameView();
+        void showUnstartedGameView(String time);
 
         void showPlayingGameView(String time, List<String> eventStrings);
 
         void showPausedGameView(String time);
 
-        void showFinishedGameView();
+        void showFinishedGameView(String time);
     }
 }

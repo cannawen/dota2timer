@@ -56,21 +56,6 @@ public class GameActivityTest {
     }
 
     @Test
-    public void onCreate_verifyViewInState_notStarted() throws Exception {
-        onView(withId(R.id.activity_game_container_not_started)).check(isVisible());
-        onView(withId(R.id.activity_game_button_start)).check(isVisible());
-
-        onView(withId(R.id.activity_game_container_started)).check(isGone());
-    }
-
-    @Test
-    @Ignore
-    public void onPressStart_verifyGameNotified() {
-        onView(withId(R.id.activity_game_button_start)).perform(click());
-        verify(game).start();
-    }
-
-    @Test
     @Ignore
     public void onPressPauseOrResume_verifyGameNotified() {
         showPlayingGameView_resetGame();
@@ -102,7 +87,7 @@ public class GameActivityTest {
     public void endGame_confirmed_verifyGameNotified() {
         showPlayingGameView_resetGame();
 
-        onView(withId(R.id.activity_game_button_end)).perform(click());
+        onView(withId(R.id.activity_game_button_start_or_end)).perform(click());
         onView(withText(R.string.game_action_end_confirmation_button_positive)).perform(click());
         verify(game).end();
     }
@@ -112,35 +97,15 @@ public class GameActivityTest {
     public void endGame_cancelled_verifyGameNotified() {
         showPlayingGameView_resetGame();
 
-        onView(withId(R.id.activity_game_button_end)).perform(click());
+        onView(withId(R.id.activity_game_button_start_or_end)).perform(click());
         onView(withText(R.string.game_action_end_confirmation_button_negative)).perform(click());
         verifyNoMoreInteractions(game);
     }
 
     @Test
     @Ignore
-    public void showUnstartedGameView_verifyViewInState_started() {
-        activity.presenter.showUnstartedGameView();
-
-        onView(withId(R.id.activity_game_container_not_started)).check(isVisible());
-        onView(withId(R.id.activity_game_button_start)).check(isVisible());
-
-        onView(withId(R.id.activity_game_container_started)).check(isGone());
-    }
-
-    @Test
-    @Ignore
     public void showPlayingGameView_verifyViewInState_started() {
         showPlayingGameView_resetGame();
-
-        onView(withId(R.id.activity_game_container_not_started)).check(isGone());
-
-        onView(withId(R.id.activity_game_container_started)).check(isVisible());
-        onView(withId(R.id.activity_game_button_time_increase)).check(isVisible());
-        onView(withId(R.id.activity_game_text_time)).check(isVisible());
-        onView(withId(R.id.activity_game_button_time_decrease)).check(isVisible());
-        onView(withId(R.id.activity_game_button_play_or_pause)).check(isVisible());
-        onView(withId(R.id.activity_game_button_end)).check(isVisible());
 
         onView(withText("time string")).check(isVisible());
     }
@@ -150,27 +115,7 @@ public class GameActivityTest {
     public void showPausedGameView_verifyViewInState_started() {
         activity.presenter.showPausedGameView("00:00:00");
 
-        onView(withId(R.id.activity_game_container_not_started)).check(isGone());
-
-        onView(withId(R.id.activity_game_container_started)).check(isVisible());
-        onView(withId(R.id.activity_game_button_time_increase)).check(isVisible());
-        onView(withId(R.id.activity_game_text_time)).check(isVisible());
-        onView(withId(R.id.activity_game_button_time_decrease)).check(isVisible());
-        onView(withId(R.id.activity_game_button_play_or_pause)).check(isVisible());
-        onView(withId(R.id.activity_game_button_end)).check(isVisible());
-
         onView(withText("00:00:00")).check(isVisible());
-    }
-
-    @Test
-    @Ignore
-    public void showFinishedGameView_verifyViewInState_started() {
-        activity.presenter.showFinishedGameView();
-
-        onView(withId(R.id.activity_game_container_not_started)).check(isVisible());
-        onView(withId(R.id.activity_game_button_start)).check(isVisible());
-
-        onView(withId(R.id.activity_game_container_started)).check(isGone());
     }
 
     public void showPlayingGameView_resetGame() {

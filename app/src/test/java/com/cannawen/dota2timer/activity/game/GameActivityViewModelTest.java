@@ -43,10 +43,11 @@ public class GameActivityViewModelTest {
 
     @Test
     public void gameUnstarted_shouldShowUnstartedGameView() {
+        when(gameState.getGameTime()).thenReturn(0);
         when(gameState.getState()).thenReturn(GameState.State.UNSTARTED);
 
         viewModel.gameStateChanged(gameState);
-        verify(presenter).showUnstartedGameView();
+        verify(presenter).showUnstartedGameView("00:00:00");
     }
 
     @Test
@@ -115,9 +116,10 @@ public class GameActivityViewModelTest {
 
     @Test
     public void gameFinished_showFinishedGameView() {
+        when(gameState.getGameTime()).thenReturn(0);
         when(gameState.getState()).thenReturn(GameState.State.FINISHED);
 
         viewModel.gameStateChanged(gameState);
-        verify(presenter).showFinishedGameView();
+        verify(presenter).showFinishedGameView("00:00:00");
     }
 }
