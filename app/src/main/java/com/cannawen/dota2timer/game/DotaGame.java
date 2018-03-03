@@ -55,6 +55,12 @@ public class DotaGame extends GameState implements Game {
     }
 
     @Override
+    public void updateTime(int time) {
+        gameTime = time;
+        triggerListener();
+    }
+
+    @Override
     public void decreaseTime() {
         gameTime--;
         triggerListener();

@@ -19,4 +19,6 @@ public interface Game extends TimerListener {
     void decreaseTime();
 
     void setConfiguration(Configuration configuration);
+
+    void updateTime(int time);
 }

@@ -2,17 +2,21 @@ package com.cannawen.dota2timer.activity.game;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -137,14 +141,55 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             ButterKnife.bind(this, activity);
         }
 
-        private void endGame() {
-            createNewGame(configuration);
+        @OnClick(R.id.activity_game_text_time)
+        public void editTime() {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+            View dialogEditTimeView = getLayoutInflater().inflate(R.layout.dialog_edit_time_view, null);
+            alert.setView(dialogEditTimeView);
+
+            alert.setNegativeButton("Set (pre-horn)", (dialog, which) -> {
+                Integer parsedTime = getInputTime(dialogEditTimeView);
+                if (parsedTime != null) {
+                    game.updateTime(-parsedTime);
+                }
+                dialog.dismiss();
+            });
+
+            alert.setPositiveButton("Set", (dialog, which) -> {
+                Integer parsedTime = getInputTime(dialogEditTimeView);
+                if (parsedTime != null) {
+                    game.updateTime(parsedTime);
+                }
+                dialog.dismiss();
+            });
+
+            alert.setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
+            alert.show();
         }
 
-        @OnClick(R.id.activity_game_button_play_or_pause)
-        public void pauseOrResume() {
-            game.pauseOrResume();
+        public Integer getInputTime(View view) {
+            try {
+                EditText minuteEditText = view.findViewById(R.id.dialog_edit_time_minute_input);
+                String minuteString = minuteEditText.getText().toString();
+                int minutes = 0;
+                if (minuteString.length() > 0) {
+                    minutes = Integer.valueOf(minuteString);
+                }
+
+                EditText secondEditText = view.findViewById(R.id.dialog_edit_time_second_input);
+                String secondString = secondEditText.getText().toString();
+                int seconds = 0;
+                if (secondString.length() > 0) {
+                    seconds = Integer.valueOf(secondString);
+                }
+
+                return minutes * 60 + seconds;
+            } catch (Exception e) {
+                return null;
+            }
         }
+
 
         @OnClick(R.id.activity_game_button_time_increase)
         public void increaseTime() {
@@ -156,13 +201,18 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             game.decreaseTime();
         }
 
+        @OnClick(R.id.activity_game_button_play_or_pause)
+        public void pauseOrResume() {
+            game.pauseOrResume();
+        }
+
         @OnClick(R.id.activity_game_button_start_or_end)
-        public void confirmEndGame() {
+        public void startOrEndGame() {
             if (game.hasStarted()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 alert.setMessage(R.string.game_action_end_confirmation_message);
                 alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
-                    endGame();
+                    createNewGame(configuration);
                     dialog.dismiss();
                 });
                 alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
