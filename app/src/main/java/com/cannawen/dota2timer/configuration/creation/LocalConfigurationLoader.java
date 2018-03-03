@@ -1,8 +1,8 @@
-package com.cannawen.dota2timer.configuration.loading;
+package com.cannawen.dota2timer.configuration.creation;
 
 import android.content.Context;
 
-import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.model.Configuration;
 
 import org.yaml.snakeyaml.Yaml;
 

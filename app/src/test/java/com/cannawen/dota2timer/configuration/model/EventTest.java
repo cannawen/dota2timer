@@ -1,6 +1,8 @@
-package com.cannawen.dota2timer.configuration;
+package com.cannawen.dota2timer.configuration.model;
 
 import android.test.suitebuilder.annotation.SmallTest;
+
+import com.cannawen.dota2timer.configuration.model.Event;
 
 import org.junit.Test;
 

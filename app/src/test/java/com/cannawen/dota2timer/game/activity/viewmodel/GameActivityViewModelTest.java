@@ -1,10 +1,10 @@
-package com.cannawen.dota2timer.activity.game;
+package com.cannawen.dota2timer.game.activity.viewmodel;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
-import com.cannawen.dota2timer.game.interfaces.GameState;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.configuration.model.Event;
+import com.cannawen.dota2timer.game.model.interfaces.GameState;
 
 import org.junit.Before;
 import org.junit.Rule;

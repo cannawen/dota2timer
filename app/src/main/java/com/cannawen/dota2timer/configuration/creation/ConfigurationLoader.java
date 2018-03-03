@@ -1,6 +1,6 @@
-package com.cannawen.dota2timer.configuration.loading;
+package com.cannawen.dota2timer.configuration.creation;
 
-import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.model.Configuration;
 
 public interface ConfigurationLoader {
     void getConfiguration(ConfigurationLoaderStatusListener listener);

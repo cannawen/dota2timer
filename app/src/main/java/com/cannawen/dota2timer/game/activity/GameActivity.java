@@ -1,17 +1,14 @@
-package com.cannawen.dota2timer.activity.game;
+package com.cannawen.dota2timer.game.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,14 +18,15 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.activity.configuration.ConfigurationActivity;
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader.ConfigurationLoaderStatusListener;
-import com.cannawen.dota2timer.configuration.loading.LocalConfigurationLoader;
-import com.cannawen.dota2timer.game.DotaGame;
-import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.configuration.activity.ConfigurationActivity;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.configuration.adapter.ConfigurationAdapter;
+import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader;
+import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader.ConfigurationLoaderStatusListener;
+import com.cannawen.dota2timer.configuration.creation.LocalConfigurationLoader;
+import com.cannawen.dota2timer.game.activity.viewmodel.GameActivityViewModel;
+import com.cannawen.dota2timer.game.model.DotaGame;
+import com.cannawen.dota2timer.game.model.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
 

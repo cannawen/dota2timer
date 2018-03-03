@@ -1,15 +1,13 @@
-package com.cannawen.dota2timer.game.interfaces;
+package com.cannawen.dota2timer.game.model.interfaces;
 
 import android.support.annotation.IntDef;
 
-import com.cannawen.dota2timer.configuration.Configuration;
+import com.cannawen.dota2timer.configuration.model.Configuration;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 public abstract class GameState {

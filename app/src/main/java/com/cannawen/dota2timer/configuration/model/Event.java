@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.configuration;
+package com.cannawen.dota2timer.configuration.model;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity.configuration;
+package com.cannawen.dota2timer.configuration.activity;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
@@ -7,8 +7,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.Event;
+import com.cannawen.dota2timer.configuration.activity.ConfigurationActivity;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.configuration.model.Event;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,9 +23,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.cannawen.dota2timer.activity.ActivityTestHelper.atPosition;
-import static com.cannawen.dota2timer.activity.ActivityTestHelper.isVisible;
-import static com.cannawen.dota2timer.activity.ActivityTestHelper.itemCount;
+import static com.cannawen.dota2timer.ActivityTestHelper.atPosition;
+import static com.cannawen.dota2timer.ActivityTestHelper.isVisible;
+import static com.cannawen.dota2timer.ActivityTestHelper.itemCount;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest

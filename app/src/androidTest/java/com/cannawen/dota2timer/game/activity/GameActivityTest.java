@@ -1,13 +1,13 @@
-package com.cannawen.dota2timer.activity.game;
+package com.cannawen.dota2timer.game.activity;
 
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.configuration.loading.ConfigurationLoader;
-import com.cannawen.dota2timer.game.interfaces.Game;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader;
+import com.cannawen.dota2timer.game.model.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 
 import org.junit.Before;
@@ -22,8 +22,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.cannawen.dota2timer.activity.ActivityTestHelper.isGone;
-import static com.cannawen.dota2timer.activity.ActivityTestHelper.isVisible;
+import static com.cannawen.dota2timer.ActivityTestHelper.isVisible;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;

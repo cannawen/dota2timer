@@ -1,9 +1,9 @@
-package com.cannawen.dota2timer.game;
+package com.cannawen.dota2timer.game.model;
 
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.game.interfaces.Game;
-import com.cannawen.dota2timer.game.interfaces.GameState;
-import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.game.model.interfaces.Game;
+import com.cannawen.dota2timer.game.model.interfaces.GameState;
+import com.cannawen.dota2timer.game.model.interfaces.GameStateChangeListener;
 
 public class DotaGame extends GameState implements Game {
     static final private int GAME_START_TIME = -75;

@@ -1,10 +1,10 @@
-package com.cannawen.dota2timer.activity.game;
+package com.cannawen.dota2timer.game.activity.viewmodel;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.cannawen.dota2timer.configuration.Event;
-import com.cannawen.dota2timer.game.interfaces.GameState;
-import com.cannawen.dota2timer.game.interfaces.GameStateChangeListener;
+import com.cannawen.dota2timer.configuration.model.Event;
+import com.cannawen.dota2timer.game.model.interfaces.GameState;
+import com.cannawen.dota2timer.game.model.interfaces.GameStateChangeListener;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity;
+package com.cannawen.dota2timer;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.ViewAssertion;

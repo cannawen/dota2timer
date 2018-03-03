@@ -1,4 +1,4 @@
-package com.cannawen.dota2timer.activity.configuration;
+package com.cannawen.dota2timer.configuration.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,8 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.configuration.Configuration;
-import com.cannawen.dota2timer.adapter.ConfigurationAdapter;
+import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.configuration.adapter.ConfigurationAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
