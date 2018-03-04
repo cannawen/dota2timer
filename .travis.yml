@@ -45,6 +45,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    if: tag =~ ^(?!untagged).*$
 notifications:
   email: false
