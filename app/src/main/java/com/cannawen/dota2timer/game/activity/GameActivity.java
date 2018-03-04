@@ -19,11 +19,11 @@ import android.widget.TextView;
 import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.activity.ConfigurationActivity;
-import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.configuration.adapter.ConfigurationAdapter;
 import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader;
 import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.creation.LocalConfigurationLoader;
+import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.game.activity.viewmodel.GameActivityViewModel;
 import com.cannawen.dota2timer.game.model.DotaGame;
 import com.cannawen.dota2timer.game.model.interfaces.Game;
@@ -40,7 +40,6 @@ import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity implements ConfigurationLoaderStatusListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
-    DotaGamePresenter presenter;
     private Game game;
     private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
@@ -59,15 +58,13 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     private void setupExternalDependencies() {
         tts = new TextToSpeech(getApplicationContext(), null);
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
-        presenter = new DotaGamePresenter(this);
-        Game game = new DotaGame(new GameActivityViewModel(presenter));
         AbstractTimer timer = new SecondTimer();
+        game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this)));
 
-        initWithDependencies(configurationLoader, game, timer);
+        initWithDependencies(configurationLoader, timer);
     }
 
-    void initWithDependencies(ConfigurationLoader loader, Game game, AbstractTimer timer) {
-        this.game = game;
+    void initWithDependencies(ConfigurationLoader loader, AbstractTimer timer) {
         this.timer = timer;
 
         loader.getConfiguration(this);
