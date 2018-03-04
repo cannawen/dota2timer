@@ -2,12 +2,12 @@ package com.cannawen.dota2timer.configuration.activity;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.FlakyTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.cannawen.dota2timer.R;
-import com.cannawen.dota2timer.configuration.activity.ConfigurationActivity;
 import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.configuration.model.Event;
 
@@ -29,6 +29,7 @@ import static com.cannawen.dota2timer.ActivityTestHelper.itemCount;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
+@FlakyTest
 public class ConfigurationActivityTest {
 
     @Rule

@@ -1,6 +1,7 @@
 package com.cannawen.dota2timer.game.activity;
 
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.filters.FlakyTest;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@FlakyTest
 public class GameActivityTest {
 
     @Rule
@@ -95,7 +97,7 @@ public class GameActivityTest {
         onView(withText(R.string.game_action_start)).perform(click());
         onView(withText(R.string.game_action_end)).perform(click());
         onView(withText(R.string.game_action_end_confirmation_button_positive)).perform(click());
-        
+
         onView(withText(R.string.game_action_start)).check(isVisible());
     }
 
