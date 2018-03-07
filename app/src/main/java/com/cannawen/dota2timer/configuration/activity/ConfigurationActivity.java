@@ -3,9 +3,12 @@ package com.cannawen.dota2timer.configuration.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
@@ -25,18 +28,14 @@ public class ConfigurationActivity extends Activity {
 
     @BindView(R.id.cell_edit_event_enabled_box)
     View checkBoxView;
-
     @BindView(R.id.cell_edit_event_name)
-    TextView eventNameDescription;
-
+    EditText eventNameDescription;
     @BindView(R.id.cell_edit_event_initial)
-    TextView eventInitialDescription;
-
+    EditText eventInitialDescription;
     @BindView(R.id.cell_edit_event_period)
-    TextView eventPeriodDescription;
-
+    EditText eventPeriodDescription;
     @BindView(R.id.cell_edit_event_notice)
-    TextView eventNoticeDescription;
+    EditText eventNoticeDescription;
 
     private Configuration configuration;
 
@@ -56,17 +55,28 @@ public class ConfigurationActivity extends Activity {
         ButterKnife.bind(this);
 
         checkBoxView.setVisibility(View.INVISIBLE);
-        eventNameDescription.setText(R.string.edit_configuration_description_event_name);
-        eventInitialDescription.setText(R.string.edit_configuration_description_event_initial);
-        eventPeriodDescription.setText(R.string.edit_configuration_description_event_period);
-        eventNoticeDescription.setText(R.string.edit_configuration_description_event_notice);
-
+        configureEditText(eventNameDescription, R.string.edit_configuration_description_event_name);
+        configureEditText(eventInitialDescription, R.string.edit_configuration_description_event_initial);
+        configureEditText(eventPeriodDescription, R.string.edit_configuration_description_event_period);
+        configureEditText(eventNoticeDescription, R.string.edit_configuration_description_event_notice);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         configuration = deserializeConfigurationFromIntent(getIntent());
         ConfigurationAdapter adapter = new ConfigurationAdapter(getApplicationContext(), true, configuration);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void configureEditText(EditText editText, @StringRes int stringResource) {
+        editText.setText(stringResource);
+
+        editText.setFocusableInTouchMode(false);
+        editText.setCursorVisible(false);
+        editText.setLongClickable(false);
+        editText.setClickable(false);
+        editText.setFocusable(false);
+        editText.setSelected(false);
+        editText.setKeyListener(null);
     }
 
     @OnClick(R.id.activity_configuration_save)

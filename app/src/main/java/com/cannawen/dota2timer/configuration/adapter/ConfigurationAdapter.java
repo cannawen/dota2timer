@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
@@ -56,16 +57,16 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
     }
 
     class ConfigurationViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.cell_edit_event_name)
-        TextView nameText;
-        @BindView(R.id.cell_edit_event_initial)
-        TextView initialText;
-        @BindView(R.id.cell_edit_event_period)
-        TextView periodText;
-        @BindView(R.id.cell_edit_event_notice)
-        TextView noticeText;
         @BindView(R.id.cell_edit_event_enabled_box)
         CheckBox enabledCheckBox;
+        @BindView(R.id.cell_edit_event_name)
+        EditText nameText;
+        @BindView(R.id.cell_edit_event_initial)
+        EditText initialText;
+        @BindView(R.id.cell_edit_event_period)
+        EditText periodText;
+        @BindView(R.id.cell_edit_event_notice)
+        EditText noticeText;
 
         ConfigurationViewHolder(View itemView) {
             super(itemView);
@@ -79,6 +80,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
                 periodText.setText(String.valueOf(event.getTime_repeat()));
                 noticeText.setText(String.valueOf(event.getTime_advance_notice()));
             } else {
+                nameText.setFocusableInTouchMode(false);
                 initialText.setVisibility(View.GONE);
                 periodText.setVisibility(View.GONE);
                 noticeText.setVisibility(View.GONE);
