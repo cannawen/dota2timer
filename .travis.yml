@@ -46,5 +46,11 @@ deploy:
     on:
       branch: master
       tags: false
+  - provider: script
+    script: scripts/hockeyappdeploy.sh
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: false
 notifications:
   email: false
