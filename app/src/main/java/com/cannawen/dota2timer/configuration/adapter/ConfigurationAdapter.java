@@ -3,6 +3,8 @@ package com.cannawen.dota2timer.configuration.adapter;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
     @Override
     public void onBindViewHolder(ConfigurationViewHolder holder, int position) {
-        holder.configureWithEvent(configuration.getEvents().get(position), position);
+        holder.configureWithEvent(configuration.getEvents().get(position));
     }
 
     @Override
@@ -73,12 +75,38 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
             ButterKnife.bind(this, itemView);
         }
 
-        void configureWithEvent(Event event, int position) {
+        void configureWithEvent(Event event) {
             nameText.setText(event.getName());
             if (detailed) {
                 initialText.setText(String.valueOf(event.getTime_initial()));
                 periodText.setText(String.valueOf(event.getTime_repeat()));
                 noticeText.setText(String.valueOf(event.getTime_advance_notice()));
+
+                nameText.addTextChangedListener(new AfterTextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        event.setName(s.toString());
+                    }
+                });
+                initialText.addTextChangedListener(new AfterTextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        event.setTime_initial(Integer.valueOf(s.toString()));
+                    }
+                });
+                periodText.addTextChangedListener(new AfterTextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        event.setTime_repeat(Integer.valueOf(s.toString()));
+                    }
+                });
+                noticeText.addTextChangedListener(new AfterTextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        event.setTime_advance_notice(Integer.valueOf(s.toString()));
+                    }
+                });
+
             } else {
                 nameText.setFocusableInTouchMode(false);
                 initialText.setVisibility(View.GONE);
@@ -87,11 +115,21 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
             }
 
             enabledCheckBox.setChecked(event.isEnabled());
-            enabledCheckBox.setTag(position);
             enabledCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                int index = (int) buttonView.getTag();
-                configuration.getEvents().get(index).setEnabled(isChecked);
+                event.setEnabled(isChecked);
             });
+        }
+    }
+
+    abstract class AfterTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
         }
     }
 }
