@@ -8,4 +8,8 @@ import lombok.Data;
 @Data
 public class Configuration implements Serializable {
     List<Event> events;
+
+    public void createNewEvent() {
+        events.add(Event.defaultEvent());
+    }
 }

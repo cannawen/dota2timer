@@ -22,6 +22,7 @@ import butterknife.OnClick;
 public class ConfigurationActivity extends Activity {
 
     private static final String INTENT_CONFIGURATION_KEY = "INTENT_CONFIGURATION_KEY";
+    ConfigurationAdapter adapter;
 
     @BindView(R.id.activity_configuration_recycler_view)
     RecyclerView recyclerView;
@@ -63,7 +64,7 @@ public class ConfigurationActivity extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         configuration = deserializeConfigurationFromIntent(getIntent());
-        ConfigurationAdapter adapter = new ConfigurationAdapter(getApplicationContext(), true, configuration);
+        adapter = new ConfigurationAdapter(getApplicationContext(), true, configuration);
         recyclerView.setAdapter(adapter);
     }
 
@@ -85,6 +86,12 @@ public class ConfigurationActivity extends Activity {
         resultIntent.putExtra(INTENT_CONFIGURATION_KEY, configuration);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
+    }
+
+    @OnClick(R.id.activity_configuration_new)
+    public void newEvent() {
+        configuration.createNewEvent();
+        adapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.activity_configuration_cancel)

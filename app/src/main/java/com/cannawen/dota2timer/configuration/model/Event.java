@@ -23,6 +23,17 @@ public class Event implements Serializable {
     int time_expire;
     boolean enabled;
 
+    public static Event defaultEvent() {
+        return Event.builder()
+                .name("Event")
+                .time_initial(0)
+                .time_repeat(NO_REPEAT)
+                .time_advance_notice(0)
+                .time_expire(NO_EXPIRY)
+                .enabled(true)
+                .build();
+    }
+
     public boolean triggeredAt(int secondsElapsed) {
         if (time_repeat == NO_REPEAT) {
             return secondsElapsed == time_initial - time_advance_notice;
@@ -39,5 +50,4 @@ public class Event implements Serializable {
                 && withinAcceptableEndRange
                 && isCorrectMultipleOfPeriod;
     }
-
 }

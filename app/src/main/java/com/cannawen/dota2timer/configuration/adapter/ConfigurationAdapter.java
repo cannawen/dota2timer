@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -41,7 +43,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
     @Override
     public void onBindViewHolder(ConfigurationViewHolder holder, int position) {
-        holder.configureWithEvent(configuration.getEvents().get(position));
+        holder.configureWithEvent(configuration.getEvents().get(position), position);
     }
 
     @Override
@@ -70,43 +72,41 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
         @BindView(R.id.cell_edit_event_notice)
         EditText noticeText;
 
+        ConfigurationTextWatcher nameChangeListener;
+        ConfigurationTextWatcher initialChangeListener;
+        ConfigurationTextWatcher periodChangeListener;
+        ConfigurationTextWatcher noticeChangeListener;
+        ConfigurationCheckboxListener checkboxListener;
+
         ConfigurationViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            nameChangeListener = new ConfigurationTextWatcher(true, false, false, false);
+            nameText.addTextChangedListener(nameChangeListener);
+            initialChangeListener = new ConfigurationTextWatcher(false, true, false, false);
+            initialText.addTextChangedListener(initialChangeListener);
+            periodChangeListener = new ConfigurationTextWatcher(false, false, true, false);
+            periodText.addTextChangedListener(periodChangeListener);
+            noticeChangeListener = new ConfigurationTextWatcher(false, false, false, true);
+            noticeText.addTextChangedListener(noticeChangeListener);
+
+            checkboxListener = new ConfigurationCheckboxListener();
+            enabledCheckBox.setOnCheckedChangeListener(checkboxListener);
         }
 
-        void configureWithEvent(Event event) {
+        void configureWithEvent(Event event, int position) {
+            nameChangeListener.setPosition(position);
+            initialChangeListener.setPosition(position);
+            periodChangeListener.setPosition(position);
+            noticeChangeListener.setPosition(position);
+            checkboxListener.setPosition(position);
+
             nameText.setText(event.getName());
             if (detailed) {
                 initialText.setText(String.valueOf(event.getTime_initial()));
                 periodText.setText(String.valueOf(event.getTime_repeat()));
                 noticeText.setText(String.valueOf(event.getTime_advance_notice()));
-
-                nameText.addTextChangedListener(new AfterTextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        event.setName(s.toString());
-                    }
-                });
-                initialText.addTextChangedListener(new AfterTextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        event.setTime_initial(Integer.valueOf(s.toString()));
-                    }
-                });
-                periodText.addTextChangedListener(new AfterTextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        event.setTime_repeat(Integer.valueOf(s.toString()));
-                    }
-                });
-                noticeText.addTextChangedListener(new AfterTextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        event.setTime_advance_notice(Integer.valueOf(s.toString()));
-                    }
-                });
-
             } else {
                 nameText.setFocusableInTouchMode(false);
                 initialText.setVisibility(View.GONE);
@@ -115,13 +115,34 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
             }
 
             enabledCheckBox.setChecked(event.isEnabled());
-            enabledCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                event.setEnabled(isChecked);
-            });
         }
     }
 
-    abstract class AfterTextWatcher implements TextWatcher {
+    class ConfigurationCheckboxListener implements CompoundButton.OnCheckedChangeListener {
+        @Setter
+        private int position;
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            configuration.getEvents().get(position).setEnabled(isChecked);
+        }
+    }
+
+    class ConfigurationTextWatcher implements TextWatcher {
+        @Setter
+        private int position;
+        private boolean name;
+        private boolean initial;
+        private boolean repeat;
+        private boolean notice;
+
+        public ConfigurationTextWatcher(boolean name, boolean initial, boolean repeat, boolean notice) {
+            this.name = name;
+            this.initial = initial;
+            this.repeat = repeat;
+            this.notice = notice;
+        }
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -129,6 +150,26 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Event event = configuration.getEvents().get(position);
+            String string = s.toString();
+            if (name) {
+                event.setName(string);
+            } else {
+                int time = s.length() == 0 ? 0 : Integer.valueOf(string);
+                if (initial) {
+                    event.setTime_initial(time);
+                }
+                if (repeat) {
+                    event.setTime_repeat(time);
+                }
+                if (notice) {
+                    event.setTime_advance_notice(time);
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
 
         }
     }

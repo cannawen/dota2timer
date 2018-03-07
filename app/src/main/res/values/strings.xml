@@ -16,4 +16,5 @@
     <string name="edit_configuration_description_event_initial">Initial</string>
     <string name="edit_configuration_description_event_period">Repeat</string>
     <string name="edit_configuration_description_event_notice">Notice</string>
+    <string name="configuration_action_new">New</string>
 </resources>
