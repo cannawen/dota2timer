@@ -147,6 +147,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
                 Integer parsedTime = getInputTime(dialogEditTimeView);
                 if (parsedTime != null) {
                     game.updateTime(-parsedTime);
+                    timer.syncSecond();
                 }
                 dialog.dismiss();
             });
@@ -155,6 +156,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
                 Integer parsedTime = getInputTime(dialogEditTimeView);
                 if (parsedTime != null) {
                     game.updateTime(parsedTime);
+                    timer.syncSecond();
                 }
                 dialog.dismiss();
             });
@@ -163,7 +165,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             alert.show();
         }
 
-        public Integer getInputTime(View view) {
+        private Integer getInputTime(View view) {
             try {
                 EditText minuteEditText = view.findViewById(R.id.dialog_edit_time_minute_input);
                 String minuteString = minuteEditText.getText().toString();
@@ -189,11 +191,13 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         @OnClick(R.id.activity_game_button_time_increase)
         public void increaseTime() {
             game.increaseTime();
+            timer.syncSecond();
         }
 
         @OnClick(R.id.activity_game_button_time_decrease)
         public void decreaseTime() {
             game.decreaseTime();
+            timer.syncSecond();
         }
 
         @OnClick(R.id.activity_game_button_play_or_pause)

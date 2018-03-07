@@ -11,6 +11,16 @@ public class SecondTimer extends AbstractTimer {
     private Handler handler = new Handler();
 
     public SecondTimer() {
+        init();
+    }
+
+    @Override
+    public void syncSecond() {
+        timer.cancel();
+        init();
+    }
+
+    private void init() {
         this.timer = new Timer();
 
         timer.schedule(new TimerTask() {
@@ -20,6 +30,6 @@ public class SecondTimer extends AbstractTimer {
                     handler.post(() -> listener.tick());
                 }
             }
-        }, 0, 1000);
+        }, 1000, 1000);
     }
 }

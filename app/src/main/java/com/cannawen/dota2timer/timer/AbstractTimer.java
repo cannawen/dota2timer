@@ -4,5 +4,7 @@ import lombok.Setter;
 
 public abstract class AbstractTimer {
     @Setter
-    protected TimerListener listener;
+    TimerListener listener;
+
+    public abstract void syncSecond();
 }
