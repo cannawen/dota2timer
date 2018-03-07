@@ -44,11 +44,20 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
+    ConfigurationAdapter adapter;
+
+    @BindView(R.id.activity_game_recycler_view_settings)
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        ButterKnife.bind(this);
+
+        adapter = new ConfigurationAdapter(getApplicationContext(), false);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerView.setAdapter(adapter);
 
         setupExternalDependencies();
 
@@ -100,6 +109,8 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
             configuration = ConfigurationActivity.deserializeConfigurationFromIntent(data);
             game.setConfiguration(configuration);
+
+            adapter.setConfiguration(configuration);
         }
     }
 
@@ -120,10 +131,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             game.reset();
         }
 
-        RecyclerView recyclerView = findViewById(R.id.activity_game_recycler_view_settings);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-        recyclerView.setAdapter(new ConfigurationAdapter(getApplicationContext(), configuration, false));
-
+        adapter.setConfiguration(configuration);
         game.setConfiguration(configuration);
         timer.setListener(game);
     }

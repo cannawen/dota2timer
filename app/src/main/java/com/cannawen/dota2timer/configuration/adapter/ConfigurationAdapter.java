@@ -1,6 +1,7 @@
 package com.cannawen.dota2timer.configuration.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +16,19 @@ import com.cannawen.dota2timer.configuration.model.Event;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdapter.ConfigurationViewHolder> {
 
+    @NonNull
     private Context context;
-    private Configuration configuration;
+    @NonNull
     private boolean detailed;
+    @Nullable
+    private Configuration configuration;
 
     @Override
     public ConfigurationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,7 +43,16 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
     @Override
     public int getItemCount() {
-        return configuration.getEvents().size();
+        if (configuration == null) {
+            return 0;
+        } else {
+            return configuration.getEvents().size();
+        }
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+        notifyDataSetChanged();
     }
 
     class ConfigurationViewHolder extends RecyclerView.ViewHolder {
