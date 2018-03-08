@@ -24,3 +24,10 @@ events:
     time_repeat: 600
     time_expire: 3600
     enabled: true
+  - name: "Double Rune Spawns"
+    time_initial: 2400
+    enabled: true
+  - name: "Catapult Wave"
+    time_initial: 300
+    time_repeat: 300
+    enabled: true
