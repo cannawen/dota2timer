@@ -24,6 +24,7 @@ import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader;
 import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader.ConfigurationLoaderStatusListener;
 import com.cannawen.dota2timer.configuration.creation.LocalConfigurationLoader;
 import com.cannawen.dota2timer.configuration.model.Configuration;
+import com.cannawen.dota2timer.game.GameManager;
 import com.cannawen.dota2timer.game.activity.viewmodel.GameActivityViewModel;
 import com.cannawen.dota2timer.game.model.DotaGame;
 import com.cannawen.dota2timer.game.model.interfaces.Game;
@@ -69,6 +70,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
         AbstractTimer timer = new SecondTimer();
         game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this)));
+        GameManager.getInstance().setGame(game);
 
         initWithDependencies(configurationLoader, timer);
     }
@@ -247,12 +249,16 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             timeText.setText(time);
             playPauseButton.setVisibility(View.INVISIBLE);
             startEndButton.setText(R.string.game_action_start);
+
+            adapter.notifyDataSetChanged();
         }
 
         @Override
         public void showPlayingGameView(final String time, final List<String> eventStrings) {
             Stream.of(eventStrings).forEach(eventString -> tts.speak(eventString, QUEUE_ADD, null, eventString));
             configureStartedGameView(time, false);
+
+            adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -271,6 +277,8 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             playPauseButton.setText(buttonStringRes);
             startEndButton.setText(R.string.game_action_end);
             playPauseButton.setVisibility(View.VISIBLE);
+
+            adapter.notifyDataSetChanged();
         }
     }
 }

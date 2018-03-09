@@ -10,6 +10,10 @@ public class Configuration implements Serializable {
     List<Event> events;
 
     public void createNewEvent() {
-        events.add(Event.defaultEvent());
+        createNewEvent(Event.defaultEvent());
+    }
+
+    public void createNewEvent(Event event) {
+        events.add(event);
     }
 }
