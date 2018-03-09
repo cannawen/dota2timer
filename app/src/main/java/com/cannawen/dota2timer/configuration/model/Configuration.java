@@ -1,5 +1,8 @@
 package com.cannawen.dota2timer.configuration.model;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,5 +18,9 @@ public class Configuration implements Serializable {
 
     public void createNewEvent(Event event) {
         events.add(event);
+    }
+
+    public void removeTransitoryEvents() {
+        events = Stream.of(events).filterNot(Event::isTransitory).collect(Collectors.toList());
     }
 }

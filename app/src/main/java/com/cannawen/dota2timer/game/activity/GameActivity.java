@@ -132,6 +132,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             game.end();
             game.reset();
         }
+        configuration.removeTransitoryEvents();
 
         adapter.setConfiguration(configuration);
         game.setConfiguration(configuration);

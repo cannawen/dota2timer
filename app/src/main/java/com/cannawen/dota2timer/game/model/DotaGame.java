@@ -90,16 +90,19 @@ public class DotaGame extends GameState implements Game {
                         .name("Aegis reclaimed")
                         .time_initial(gameTime + 300)
                         .enabled(true)
+                        .transitory(true)
                         .build();
                 Event earlyEvent = Event.builder()
                         .name("Roshan early spawn")
                         .time_initial(gameTime + 480)
                         .enabled(true)
+                        .transitory(true)
                         .build();
                 Event lateEvent = Event.builder()
                         .name("Roshan late spawn")
                         .time_initial(gameTime + 660)
                         .enabled(true)
+                        .transitory(true)
                         .build();
                 configuration.createNewEvent(aegisReclaimed);
                 configuration.createNewEvent(earlyEvent);
@@ -109,7 +112,7 @@ public class DotaGame extends GameState implements Game {
         }
         triggerListener();
     }
-    
+
     private void initializeState() {
         gameTime = GAME_START_TIME;
         state = State.UNSTARTED;
