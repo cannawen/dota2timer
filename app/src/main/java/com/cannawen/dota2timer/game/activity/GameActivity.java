@@ -41,7 +41,7 @@ import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 
 public class GameActivity extends Activity implements ConfigurationLoaderStatusListener {
     private static final int EDIT_CONFIGURATION_ACTIVITY_RESULT = 0;
-    private Game game;
+    private GameManager gameManager = GameManager.getInstance();
     private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
@@ -69,7 +69,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         tts = new TextToSpeech(getApplicationContext(), null);
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
         AbstractTimer timer = new SecondTimer();
-        game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this)));
+        Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this)));
         GameManager.getInstance().setGame(game);
 
         initWithDependencies(configurationLoader, timer);
@@ -110,7 +110,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         }
         if (requestCode == EDIT_CONFIGURATION_ACTIVITY_RESULT) {
             configuration = ConfigurationActivity.deserializeConfigurationFromIntent(data);
-            game.setConfiguration(configuration);
+            gameManager.getGame().setConfiguration(configuration);
 
             adapter.setConfiguration(configuration);
         }
@@ -128,15 +128,11 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     }
 
     private void createNewGame(Configuration configuration) {
-        if (game != null) {
-            game.end();
-            game.reset();
-        }
         configuration.removeTransitoryEvents();
 
+        gameManager.resetGame(configuration);
         adapter.setConfiguration(configuration);
-        game.setConfiguration(configuration);
-        timer.setListener(game);
+        timer.setListener(gameManager.getGame());
     }
 
     class DotaGameInteractionHandler {
@@ -157,7 +153,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             alert.setNegativeButton("Set (pre-horn)", (dialog, which) -> {
                 Integer parsedTime = getInputTime(dialogEditTimeView);
                 if (parsedTime != null) {
-                    game.updateTime(-parsedTime);
+                    gameManager.getGame().updateTime(-parsedTime);
                     timer.syncSecond();
                 }
                 dialog.dismiss();
@@ -166,7 +162,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             alert.setPositiveButton("Set", (dialog, which) -> {
                 Integer parsedTime = getInputTime(dialogEditTimeView);
                 if (parsedTime != null) {
-                    game.updateTime(parsedTime);
+                    gameManager.getGame().updateTime(parsedTime);
                     timer.syncSecond();
                 }
                 dialog.dismiss();
@@ -201,24 +197,24 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
 
         @OnClick(R.id.activity_game_button_time_increase)
         public void increaseTime() {
-            game.increaseTime();
+            gameManager.getGame().increaseTime();
             timer.syncSecond();
         }
 
         @OnClick(R.id.activity_game_button_time_decrease)
         public void decreaseTime() {
-            game.decreaseTime();
+            gameManager.getGame().decreaseTime();
             timer.syncSecond();
         }
 
         @OnClick(R.id.activity_game_button_play_or_pause)
         public void pauseOrResume() {
-            game.pauseOrResume();
+            gameManager.getGame().pauseOrResume();
         }
 
         @OnClick(R.id.activity_game_button_start_or_end)
         public void startOrEndGame() {
-            if (game.hasStarted()) {
+            if (gameManager.getGame().hasStarted()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 alert.setMessage(R.string.game_action_end_confirmation_message);
                 alert.setPositiveButton(R.string.game_action_end_confirmation_button_positive, (dialog, which) -> {
@@ -228,7 +224,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
                 alert.setNegativeButton(R.string.game_action_end_confirmation_button_negative, (dialog, which) -> dialog.dismiss());
                 alert.show();
             } else {
-                game.start();
+                gameManager.getGame().start();
             }
         }
     }
