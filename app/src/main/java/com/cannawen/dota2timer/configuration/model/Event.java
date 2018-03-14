@@ -22,6 +22,7 @@ public class Event implements Serializable {
     int time_advance_notice;
     int time_expire;
     boolean enabled;
+    boolean transitory;
 
     public static Event defaultEvent() {
         return Event.builder()
@@ -31,6 +32,7 @@ public class Event implements Serializable {
                 .time_advance_notice(0)
                 .time_expire(NO_EXPIRY)
                 .enabled(true)
+                .transitory(false)
                 .build();
     }
 
