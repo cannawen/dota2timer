@@ -71,16 +71,14 @@ public class GameActivityViewModelTest {
     @Test
     public void gamePlaying_showPlayingGameView_eventTriggered() {
         Event triggeredEvent_A = mock(Event.class);
-        when(triggeredEvent_A.getName()).thenReturn("A");
+        when(triggeredEvent_A.getSpokenName()).thenReturn("A");
         when(triggeredEvent_A.triggeredAt(70)).thenReturn(true);
 
         Event nonTriggeredEvent = mock(Event.class);
-        when(nonTriggeredEvent.triggeredAt(69)).thenReturn(true);
         when(nonTriggeredEvent.triggeredAt(70)).thenReturn(false);
-        when(nonTriggeredEvent.triggeredAt(71)).thenReturn(true);
 
         Event triggeredEvent_B = mock(Event.class);
-        when(triggeredEvent_B.getName()).thenReturn("B");
+        when(triggeredEvent_B.getSpokenName()).thenReturn("B");
         when(triggeredEvent_B.triggeredAt(70)).thenReturn(true);
 
         when(configuration.getEvents()).thenReturn(Arrays.asList(

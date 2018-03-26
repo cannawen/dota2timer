@@ -20,7 +20,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
             case GameState.State.PLAYING: {
                 List<String> eventNames = Stream.of(gameState.getConfiguration().getEvents())
                         .filter(event -> event.triggeredAt(gameState.getGameTime()))
-                        .map(Event::getName)
+                        .map(Event::getSpokenName)
                         .collect(Collectors.toList());
 
                 presenter.showPlayingGameView(timeString(gameState), eventNames);

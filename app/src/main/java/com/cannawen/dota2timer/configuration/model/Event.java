@@ -4,11 +4,10 @@ import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,17 +15,30 @@ public class Event implements Serializable {
     static int NO_EXPIRY = 0; // TODO test snakeYAML serialization with event object default values
     static int NO_REPEAT = 0; // TODO test snakeYAML serialization with event object default values
 
+    @Getter
+    @Setter
     String name;
+    String spoken_name;
+    @Getter
+    @Setter
     int time_initial;
+    @Getter
+    @Setter
     int time_repeat;
+    @Getter
+    @Setter
     int time_advance_notice;
     int time_expire;
+    @Getter
+    @Setter
     boolean enabled;
+    @Getter
     boolean transitory;
 
     public static Event defaultEvent() {
         return Event.builder()
                 .name("Event")
+                .spoken_name(null)
                 .time_initial(0)
                 .time_repeat(NO_REPEAT)
                 .time_advance_notice(0)
@@ -34,6 +46,10 @@ public class Event implements Serializable {
                 .enabled(true)
                 .transitory(false)
                 .build();
+    }
+
+    public String getSpokenName() {
+        return spoken_name == null ? name : spoken_name;
     }
 
     public boolean triggeredAt(int secondsElapsed) {

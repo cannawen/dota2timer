@@ -6,6 +6,7 @@ import com.cannawen.dota2timer.configuration.model.Event;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -107,5 +108,22 @@ public class EventTest {
                 .build();
         assertTrue(event.triggeredAt(574));
         assertFalse(event.triggeredAt(604));
+    }
+
+    @Test
+    public void event_spokenName_defaultsToName() {
+        Event event = Event.builder()
+                .name("Hello")
+                .build();
+        assertEquals("Hello", event.getSpokenName());
+    }
+
+    @Test
+    public void event_spokenName_customizable() {
+        Event event = Event.builder()
+                .name("Hello")
+                .spoken_name("Hello there")
+                .build();
+        assertEquals("Hello there", event.getSpokenName());
     }
 }

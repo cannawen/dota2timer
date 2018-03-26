@@ -38,7 +38,8 @@ Each event is described:
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| name | String | Yes | N/A | Text that will be spoken when notifying the user of an event |
+| name | String | Yes | N/A | Text that will be shown when notifying the user of an event |
+| spoken_name | String | No | `name` | Text that will be spoken when notifying the user of an event |
 | time_initial | Integer | No | `0` | When the first event should be triggered (in seconds) |
 | time_expire | Integer | No | `0` (NO_EXPIRY) | When to stop notifying user about this event (in seconds) |
 | time_repeat | Integer | No | `0` (NO_REPEAT) | How often this event should be triggered (in seconds) |
