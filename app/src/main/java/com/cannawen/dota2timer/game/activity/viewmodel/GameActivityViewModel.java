@@ -5,6 +5,7 @@ import com.annimon.stream.Stream;
 import com.cannawen.dota2timer.configuration.model.Event;
 import com.cannawen.dota2timer.game.model.interfaces.GameState;
 import com.cannawen.dota2timer.game.model.interfaces.GameStateChangeListener;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import java.util.List;
 
@@ -13,9 +14,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GameActivityViewModel implements GameStateChangeListener {
     private GamePresenter presenter;
+    private TimeFormattingUtility timeUtility;
 
     @Override
     public void gameStateChanged(final GameState gameState) {
+        String timeString = timeUtility.timeString(gameState.getGameTime());
+
         switch (gameState.getState()) {
             case GameState.State.PLAYING: {
                 List<String> eventNames = Stream.of(gameState.getConfiguration().getEvents())
@@ -23,38 +27,22 @@ public class GameActivityViewModel implements GameStateChangeListener {
                         .map(Event::getSpokenName)
                         .collect(Collectors.toList());
 
-                presenter.showPlayingGameView(timeString(gameState), eventNames);
+                presenter.showPlayingGameView(timeString, eventNames);
                 break;
             }
             case GameState.State.PAUSED: {
-                presenter.showPausedGameView(timeString(gameState));
+                presenter.showPausedGameView(timeString);
                 break;
             }
             case GameState.State.FINISHED: {
-                presenter.showFinishedGameView(timeString(gameState));
+                presenter.showFinishedGameView(timeString);
             }
             case GameState.State.UNSTARTED:
             default: {
-                presenter.showUnstartedGameView(timeString(gameState));
+                presenter.showUnstartedGameView(timeString);
                 break;
             }
         }
-    }
-
-    private String timeString(GameState gameState) {
-        int secondsElapsed = gameState.getGameTime();
-
-        String signString = "";
-        if (secondsElapsed < 0) {
-            signString = "-";
-            secondsElapsed = secondsElapsed * -1;
-        }
-
-        int hours = secondsElapsed / 3600;
-        int minutes = (secondsElapsed % 3600) / 60;
-        int seconds = secondsElapsed % 60;
-
-        return String.format("%s%02d:%02d:%02d", signString, hours, minutes, seconds);
     }
 
     public interface GamePresenter {

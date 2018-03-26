@@ -5,6 +5,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.configuration.model.Event;
 import com.cannawen.dota2timer.game.model.interfaces.GameState;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +16,7 @@ import org.mockito.junit.MockitoRule;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +27,7 @@ public class GameActivityViewModelTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     GameActivityViewModel.GamePresenter presenter;
+    TimeFormattingUtility timeUtility;
     GameState gameState;
     Configuration configuration;
 
@@ -33,17 +36,17 @@ public class GameActivityViewModelTest {
     @Before
     public void setUp() {
         presenter = mock(GameActivityViewModel.GamePresenter.class);
+        timeUtility = mock(TimeFormattingUtility.class);
         gameState = mock(GameState.class);
         configuration = mock(Configuration.class);
 
-        when(gameState.getConfiguration()).thenReturn(configuration);
-
-        viewModel = new GameActivityViewModel(presenter);
+        viewModel = new GameActivityViewModel(presenter, timeUtility);
     }
 
     @Test
     public void gameUnstarted_shouldShowUnstartedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
+        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.UNSTARTED);
 
         viewModel.gameStateChanged(gameState);
@@ -52,20 +55,13 @@ public class GameActivityViewModelTest {
 
     @Test
     public void gamePlaying_showPlayingGameView_noEvents() {
+        when(gameState.getConfiguration()).thenReturn(configuration);
         when(gameState.getGameTime()).thenReturn(3601);
+        when(timeUtility.timeString(anyInt())).thenReturn("01:00:01");
         when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
         verify(presenter).showPlayingGameView("01:00:01", Collections.emptyList());
-    }
-
-    @Test
-    public void gamePlaying_showPlayingGameView_noEvents_negativeTime() {
-        when(gameState.getGameTime()).thenReturn(-1);
-        when(gameState.getState()).thenReturn(GameState.State.PLAYING);
-
-        viewModel.gameStateChanged(gameState);
-        verify(presenter).showPlayingGameView("-00:00:01", Collections.emptyList());
     }
 
     @Test
@@ -81,6 +77,8 @@ public class GameActivityViewModelTest {
         when(triggeredEvent_B.getSpokenName()).thenReturn("B");
         when(triggeredEvent_B.triggeredAt(70)).thenReturn(true);
 
+        when(gameState.getConfiguration()).thenReturn(configuration);
+
         when(configuration.getEvents()).thenReturn(Arrays.asList(
                 triggeredEvent_A,
                 nonTriggeredEvent,
@@ -88,6 +86,7 @@ public class GameActivityViewModelTest {
         ));
 
         when(gameState.getGameTime()).thenReturn(70);
+        when(timeUtility.timeString(anyInt())).thenReturn("00:01:10");
         when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
@@ -97,6 +96,7 @@ public class GameActivityViewModelTest {
     @Test
     public void gamePaused_showPausedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
+        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.PAUSED);
 
         viewModel.gameStateChanged(gameState);
@@ -104,17 +104,9 @@ public class GameActivityViewModelTest {
     }
 
     @Test
-    public void gamePaused_showPausedGameView_negativeTime() {
-        when(gameState.getGameTime()).thenReturn(-75);
-        when(gameState.getState()).thenReturn(GameState.State.PAUSED);
-
-        viewModel.gameStateChanged(gameState);
-        verify(presenter).showPausedGameView("-00:01:15");
-    }
-
-    @Test
     public void gameFinished_showFinishedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
+        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.FINISHED);
 
         viewModel.gameStateChanged(gameState);

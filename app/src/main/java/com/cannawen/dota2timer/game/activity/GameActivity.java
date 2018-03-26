@@ -30,6 +30,7 @@ import com.cannawen.dota2timer.game.model.DotaGame;
 import com.cannawen.dota2timer.game.model.interfaces.Game;
 import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.timer.SecondTimer;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         tts = new TextToSpeech(getApplicationContext(), null);
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
         AbstractTimer timer = new SecondTimer();
-        Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this)));
+        Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this), new TimeFormattingUtility()));
         GameManager.getInstance().setGame(game);
 
         initWithDependencies(configurationLoader, timer);
