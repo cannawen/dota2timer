@@ -86,21 +86,27 @@ public class DotaGame extends GameState implements Game {
     public void note(String event) {
         switch (event) {
             case VOICE_KEYWORD_ROSHAN: {
+                int aegisTimerSeconds = gameTime + 300;
                 Event aegisReclaimed = Event.builder()
-                        .name("Aegis reclaimed")
-                        .time_initial(gameTime + 300)
+                        .name("Aegis reclaimed (" + aegisTimerSeconds + ")")
+                        .spoken_name("Aegis reclaimed")
+                        .time_initial(aegisTimerSeconds)
                         .enabled(true)
                         .transitory(true)
                         .build();
+                int earlyEventSeconds = gameTime + 480;
                 Event earlyEvent = Event.builder()
-                        .name("Roshan early spawn")
+                        .name("Roshan early spawn (" + earlyEventSeconds + ")")
+                        .spoken_name("Roshan early spawn")
                         .time_initial(gameTime + 480)
                         .enabled(true)
                         .transitory(true)
                         .build();
+                int lateEventSeconds = gameTime + 660;
                 Event lateEvent = Event.builder()
-                        .name("Roshan late spawn")
-                        .time_initial(gameTime + 660)
+                        .name("Roshan late spawn (" + lateEventSeconds + ")")
+                        .spoken_name("Roshan late spawn")
+                        .time_initial(lateEventSeconds)
                         .enabled(true)
                         .transitory(true)
                         .build();
