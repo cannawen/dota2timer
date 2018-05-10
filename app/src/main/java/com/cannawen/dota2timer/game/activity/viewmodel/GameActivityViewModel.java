@@ -18,7 +18,7 @@ public class GameActivityViewModel implements GameStateChangeListener {
 
     @Override
     public void gameStateChanged(final GameState gameState) {
-        String timeString = timeUtility.timeString(gameState.getGameTime());
+        String timeString = timeUtility.parseTimeSecondsToString(gameState.getGameTime());
 
         switch (gameState.getState()) {
             case GameState.State.PLAYING: {

@@ -27,7 +27,6 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:inputType="number"
         android:textColor="@android:color/darker_gray"
         tools:text="120" />
 
@@ -36,7 +35,6 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:inputType="number"
         android:textColor="@android:color/darker_gray"
         tools:text="120" />
 
@@ -45,7 +43,6 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:inputType="number"
         android:textColor="@android:color/darker_gray"
         tools:text="7" />
 

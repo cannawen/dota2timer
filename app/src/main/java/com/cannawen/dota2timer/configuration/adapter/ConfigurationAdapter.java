@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.configuration.model.Event;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,9 +104,9 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
             nameText.setText(event.getName());
             if (detailed) {
-                initialText.setText(String.valueOf(event.getTime_initial()));
-                periodText.setText(String.valueOf(event.getTime_repeat()));
-                noticeText.setText(String.valueOf(event.getTime_advance_notice()));
+                initialText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_initial()));
+                periodText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_repeat()));
+                noticeText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_advance_notice()));
             } else {
                 nameText.setFocusableInTouchMode(false);
                 initialText.setVisibility(View.GONE);
@@ -155,7 +155,7 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
             if (name) {
                 event.setName(string);
             } else {
-                int time = s.length() == 0 ? 0 : Integer.valueOf(string);
+                int time = s.length() == 0 ? 0 : TimeFormattingUtility.parseTimeStringToSeconds(string);
                 if (initial) {
                     event.setTime_initial(time);
                 }

@@ -5,6 +5,7 @@ import com.cannawen.dota2timer.configuration.model.Event;
 import com.cannawen.dota2timer.game.model.interfaces.Game;
 import com.cannawen.dota2timer.game.model.interfaces.GameState;
 import com.cannawen.dota2timer.game.model.interfaces.GameStateChangeListener;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import java.util.Arrays;
 import java.util.List;
@@ -88,7 +89,7 @@ public class DotaGame extends GameState implements Game {
             case VOICE_KEYWORD_ROSHAN: {
                 int aegisTimerSeconds = gameTime + 300;
                 Event aegisReclaimed = Event.builder()
-                        .name("Aegis reclaimed (" + aegisTimerSeconds + ")")
+                        .name("Aegis reclaimed (" + TimeFormattingUtility.parseTimeSecondsToString(aegisTimerSeconds) + ")")
                         .spoken_name("Aegis reclaimed")
                         .time_initial(aegisTimerSeconds)
                         .enabled(true)
@@ -96,7 +97,7 @@ public class DotaGame extends GameState implements Game {
                         .build();
                 int earlyEventSeconds = gameTime + 480;
                 Event earlyEvent = Event.builder()
-                        .name("Roshan early spawn (" + earlyEventSeconds + ")")
+                        .name("Roshan early spawn (" + TimeFormattingUtility.parseTimeSecondsToString(earlyEventSeconds) + ")")
                         .spoken_name("Roshan early spawn")
                         .time_initial(gameTime + 480)
                         .enabled(true)
@@ -104,7 +105,7 @@ public class DotaGame extends GameState implements Game {
                         .build();
                 int lateEventSeconds = gameTime + 660;
                 Event lateEvent = Event.builder()
-                        .name("Roshan late spawn (" + lateEventSeconds + ")")
+                        .name("Roshan late spawn (" + TimeFormattingUtility.parseTimeSecondsToString(lateEventSeconds) + ")")
                         .spoken_name("Roshan late spawn")
                         .time_initial(lateEventSeconds)
                         .enabled(true)

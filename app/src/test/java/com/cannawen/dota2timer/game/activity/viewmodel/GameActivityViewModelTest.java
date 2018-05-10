@@ -46,7 +46,7 @@ public class GameActivityViewModelTest {
     @Test
     public void gameUnstarted_shouldShowUnstartedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
-        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
+        when(timeUtility.parseTimeSecondsToString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.UNSTARTED);
 
         viewModel.gameStateChanged(gameState);
@@ -57,7 +57,7 @@ public class GameActivityViewModelTest {
     public void gamePlaying_showPlayingGameView_noEvents() {
         when(gameState.getConfiguration()).thenReturn(configuration);
         when(gameState.getGameTime()).thenReturn(3601);
-        when(timeUtility.timeString(anyInt())).thenReturn("01:00:01");
+        when(timeUtility.parseTimeSecondsToString(anyInt())).thenReturn("01:00:01");
         when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
@@ -86,7 +86,7 @@ public class GameActivityViewModelTest {
         ));
 
         when(gameState.getGameTime()).thenReturn(70);
-        when(timeUtility.timeString(anyInt())).thenReturn("00:01:10");
+        when(timeUtility.parseTimeSecondsToString(anyInt())).thenReturn("00:01:10");
         when(gameState.getState()).thenReturn(GameState.State.PLAYING);
 
         viewModel.gameStateChanged(gameState);
@@ -96,7 +96,7 @@ public class GameActivityViewModelTest {
     @Test
     public void gamePaused_showPausedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
-        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
+        when(timeUtility.parseTimeSecondsToString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.PAUSED);
 
         viewModel.gameStateChanged(gameState);
@@ -106,7 +106,7 @@ public class GameActivityViewModelTest {
     @Test
     public void gameFinished_showFinishedGameView() {
         when(gameState.getGameTime()).thenReturn(0);
-        when(timeUtility.timeString(anyInt())).thenReturn("00:00:00");
+        when(timeUtility.parseTimeSecondsToString(anyInt())).thenReturn("00:00:00");
         when(gameState.getState()).thenReturn(GameState.State.FINISHED);
 
         viewModel.gameStateChanged(gameState);
