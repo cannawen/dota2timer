@@ -1,7 +1,12 @@
 events:
-  - name: "Runes"
+  - name: "Powerup Runes"
     time_initial: 120
     time_repeat: 120
+    time_advance_notice: 7
+    enabled: true
+  - name: "Bounty Runes"
+    time_initial: 300
+    time_repeat: 300
     time_advance_notice: 7
     enabled: true
   - name: "Stack"
@@ -16,8 +21,8 @@ events:
     time_advance_notice: 7
     enabled: true
   - name: "Ward"
-    time_initial: 150
-    time_repeat: 150
+    time_initial: 135
+    time_repeat: 135
     enabled: false
   - name: "Tome"
     time_initial: 600
