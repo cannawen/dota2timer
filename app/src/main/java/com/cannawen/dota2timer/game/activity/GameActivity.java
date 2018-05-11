@@ -46,6 +46,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
     private AbstractTimer timer;
     private Configuration configuration; //TODO not ideal to have this state saved here as well as in GameState
     private TextToSpeech tts;
+    private TimeFormattingUtility timeFormattingUtility;
     ConfigurationAdapter adapter;
 
     @BindView(R.id.activity_game_recycler_view_settings)
@@ -57,7 +58,7 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
-        adapter = new ConfigurationAdapter(getApplicationContext(), false);
+        adapter = new ConfigurationAdapter(getApplicationContext(), false, timeFormattingUtility);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
         recyclerView.setAdapter(adapter);
 
@@ -70,14 +71,17 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         tts = new TextToSpeech(getApplicationContext(), null);
         ConfigurationLoader configurationLoader = new LocalConfigurationLoader(getApplicationContext());
         AbstractTimer timer = new SecondTimer();
-        Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this), new TimeFormattingUtility()));
+        TimeFormattingUtility timeUtil = new TimeFormattingUtility();
+        Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this), timeUtil), timeUtil);
         GameManager.getInstance().setGame(game);
+        timeFormattingUtility = new TimeFormattingUtility();
 
-        initWithDependencies(configurationLoader, timer);
+        initWithDependencies(configurationLoader, timer, timeFormattingUtility);
     }
 
-    void initWithDependencies(ConfigurationLoader loader, AbstractTimer timer) {
+    void initWithDependencies(ConfigurationLoader loader, AbstractTimer timer, TimeFormattingUtility timeFormattingUtility) {
         this.timer = timer;
+        this.timeFormattingUtility = timeFormattingUtility;
 
         loader.getConfiguration(this);
     }

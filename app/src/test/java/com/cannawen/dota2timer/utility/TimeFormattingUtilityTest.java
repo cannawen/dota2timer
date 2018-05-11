@@ -20,16 +20,16 @@ public class TimeFormattingUtilityTest {
 
     @Test
     public void timeFormatter_shouldTurnSecondsIntoHHMMSSFormat() {
-        assertEquals("00:00:00", utility.parseTimeSecondsToString(0));
+        assertEquals("0", utility.parseTimeSecondsToString(0));
     }
 
     @Test
     public void timeFormatter_shouldHandleNegativeTime() {
-        assertEquals("-00:01:01", utility.parseTimeSecondsToString(-61));
+        assertEquals("-1:01", utility.parseTimeSecondsToString(-61));
     }
 
     @Test
     public void timeFormatter_shouldHandlePositiveTime() {
-        assertEquals("01:01:01", utility.parseTimeSecondsToString(3661));
+        assertEquals("1:01:01", utility.parseTimeSecondsToString(3661));
     }
 }

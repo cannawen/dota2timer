@@ -14,10 +14,12 @@ public class DotaGame extends GameState implements Game {
     static final private int GAME_START_TIME = -75;
     static final private String VOICE_KEYWORD_ROSHAN = "roshan";
 
-    protected GameStateChangeListener listener;
+    private GameStateChangeListener listener;
+    private TimeFormattingUtility timeFormattingUtility;
 
-    public DotaGame(GameStateChangeListener listener) {
+    public DotaGame(GameStateChangeListener listener, TimeFormattingUtility timeFormattingUtility) {
         this.listener = listener;
+        this.timeFormattingUtility = timeFormattingUtility;
 
         initializeState();
     }
@@ -89,7 +91,7 @@ public class DotaGame extends GameState implements Game {
             case VOICE_KEYWORD_ROSHAN: {
                 int aegisTimerSeconds = gameTime + 300;
                 Event aegisReclaimed = Event.builder()
-                        .name("Aegis reclaimed (" + TimeFormattingUtility.parseTimeSecondsToString(aegisTimerSeconds) + ")")
+                        .name("Aegis reclaimed (" + timeFormattingUtility.parseTimeSecondsToString(aegisTimerSeconds) + ")")
                         .spoken_name("Aegis reclaimed")
                         .time_initial(aegisTimerSeconds)
                         .enabled(true)
@@ -97,7 +99,7 @@ public class DotaGame extends GameState implements Game {
                         .build();
                 int earlyEventSeconds = gameTime + 480;
                 Event earlyEvent = Event.builder()
-                        .name("Roshan early spawn (" + TimeFormattingUtility.parseTimeSecondsToString(earlyEventSeconds) + ")")
+                        .name("Roshan early spawn (" + timeFormattingUtility.parseTimeSecondsToString(earlyEventSeconds) + ")")
                         .spoken_name("Roshan early spawn")
                         .time_initial(gameTime + 480)
                         .enabled(true)
@@ -105,7 +107,7 @@ public class DotaGame extends GameState implements Game {
                         .build();
                 int lateEventSeconds = gameTime + 660;
                 Event lateEvent = Event.builder()
-                        .name("Roshan late spawn (" + TimeFormattingUtility.parseTimeSecondsToString(lateEventSeconds) + ")")
+                        .name("Roshan late spawn (" + timeFormattingUtility.parseTimeSecondsToString(lateEventSeconds) + ")")
                         .spoken_name("Roshan late spawn")
                         .time_initial(lateEventSeconds)
                         .enabled(true)

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
     private boolean detailed;
     @Nullable
     private Configuration configuration;
+    @NonNull
+    private TimeFormattingUtility timeFormattingUtility;
 
     @Override
     public ConfigurationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -104,9 +107,9 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
             nameText.setText(event.getName());
             if (detailed) {
-                initialText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_initial()));
-                periodText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_repeat()));
-                noticeText.setText(TimeFormattingUtility.parseTimeSecondsToString(event.getTime_advance_notice()));
+                initialText.setText(timeFormattingUtility.parseTimeSecondsToString(event.getTime_initial()));
+                periodText.setText(timeFormattingUtility.parseTimeSecondsToString(event.getTime_repeat()));
+                noticeText.setText(timeFormattingUtility.parseTimeSecondsToString(event.getTime_advance_notice()));
             } else {
                 nameText.setFocusableInTouchMode(false);
                 initialText.setVisibility(View.GONE);
@@ -150,21 +153,25 @@ public class ConfigurationAdapter extends RecyclerView.Adapter<ConfigurationAdap
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Event event = configuration.getEvents().get(position);
-            String string = s.toString();
-            if (name) {
-                event.setName(string);
-            } else {
-                int time = s.length() == 0 ? 0 : TimeFormattingUtility.parseTimeStringToSeconds(string);
-                if (initial) {
-                    event.setTime_initial(time);
+            try {
+                Event event = configuration.getEvents().get(position);
+                String string = s.toString();
+                if (name) {
+                    event.setName(string);
+                } else {
+                    int time = s.length() == 0 ? 0 : timeFormattingUtility.parseTimeStringToSeconds(string);
+                    if (initial) {
+                        event.setTime_initial(time);
+                    }
+                    if (repeat) {
+                        event.setTime_repeat(time);
+                    }
+                    if (notice) {
+                        event.setTime_advance_notice(time);
+                    }
                 }
-                if (repeat) {
-                    event.setTime_repeat(time);
-                }
-                if (notice) {
-                    event.setTime_advance_notice(time);
-                }
+            } catch (Exception e) {
+                Log.d("dota2timer", e.toString());
             }
         }
 

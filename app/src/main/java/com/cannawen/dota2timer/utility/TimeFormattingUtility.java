@@ -6,7 +6,7 @@ import com.annimon.stream.Stream;
 import java.util.List;
 
 public class TimeFormattingUtility {
-    public static String parseTimeSecondsToString(int totalSeconds) {
+    public String parseTimeSecondsToString(int totalSeconds) {
         String signString = "";
         if (totalSeconds < 0) {
             signString = "-";
@@ -17,10 +17,16 @@ public class TimeFormattingUtility {
         int minutes = (totalSeconds % 3600) / 60;
         int seconds = totalSeconds % 60;
 
-        return String.format("%s%02d:%02d:%02d", signString, hours, minutes, seconds);
+        if (hours > 0) {
+            return String.format("%s%d:%02d:%02d", signString, hours, minutes, seconds);
+        }
+        if (minutes > 0) {
+            return String.format("%s%d:%02d", signString, minutes, seconds);
+        }
+        return String.format("%s%d", signString, seconds);
     }
 
-    public static int parseTimeStringToSeconds(String string) {
+    public int parseTimeStringToSeconds(String string) {
         boolean negative = false;
         if (string.startsWith("-")) {
             negative = true;

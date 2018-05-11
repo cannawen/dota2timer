@@ -7,6 +7,7 @@ import com.cannawen.dota2timer.game.model.interfaces.GameState;
 import com.cannawen.dota2timer.game.model.interfaces.GameState.State;
 import com.cannawen.dota2timer.game.model.interfaces.GameStateChangeListener;
 import com.cannawen.dota2timer.game.model.DotaGame;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,6 +29,7 @@ public class DotaGameTest {
 
     GameStateChangeListener listener;
     Configuration configuration;
+    TimeFormattingUtility timeUtil;
 
     DotaGame game;
 
@@ -36,7 +38,7 @@ public class DotaGameTest {
         listener = mock(GameStateChangeListener.class);
         configuration = mock(Configuration.class);
 
-        game = new DotaGame(listener);
+        game = new DotaGame(listener, timeUtil);
         game.setConfiguration(configuration);
     }
 

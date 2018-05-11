@@ -45,7 +45,7 @@ public class GameActivityTest {
         configurationLoader = mock(ConfigurationLoader.class);
         timer = mock(AbstractTimer.class);
 
-        activity.initWithDependencies(configurationLoader, timer);
+        activity.initWithDependencies(configurationLoader, timer, timeFormattingUtility);
 
         activity.onLoadConfigurationSuccess(mock(Configuration.class));
     }
