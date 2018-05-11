@@ -13,6 +13,7 @@ import com.cannawen.dota2timer.timer.AbstractTimer;
 import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 @FlakyTest
+@Ignore
 public class GameActivityTest {
 
     @Rule
