@@ -10,6 +10,7 @@ import com.cannawen.dota2timer.R;
 import com.cannawen.dota2timer.configuration.creation.ConfigurationLoader;
 import com.cannawen.dota2timer.configuration.model.Configuration;
 import com.cannawen.dota2timer.timer.AbstractTimer;
+import com.cannawen.dota2timer.utility.TimeFormattingUtility;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +34,7 @@ public class GameActivityTest {
     public ActivityTestRule<GameActivity> rule = new ActivityTestRule<>(GameActivity.class);
 
     ConfigurationLoader configurationLoader;
+    TimeFormattingUtility timeFormattingUtility;
     AbstractTimer timer;
 
     GameActivity activity;
@@ -44,6 +46,7 @@ public class GameActivityTest {
 
         configurationLoader = mock(ConfigurationLoader.class);
         timer = mock(AbstractTimer.class);
+        timeFormattingUtility = mock(TimeFormattingUtility.class);
 
         activity.initWithDependencies(configurationLoader, timer, timeFormattingUtility);
 

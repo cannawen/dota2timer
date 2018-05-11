@@ -58,10 +58,6 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
 
-        adapter = new ConfigurationAdapter(getApplicationContext(), false, timeFormattingUtility);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-        recyclerView.setAdapter(adapter);
-
         setupExternalDependencies();
 
         new DotaGameInteractionHandler(this);
@@ -75,6 +71,10 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
         Game game = new DotaGame(new GameActivityViewModel(new DotaGamePresenter(this), timeUtil), timeUtil);
         GameManager.getInstance().setGame(game);
         timeFormattingUtility = new TimeFormattingUtility();
+
+        adapter = new ConfigurationAdapter(getApplicationContext(), false, timeFormattingUtility);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerView.setAdapter(adapter);
 
         initWithDependencies(configurationLoader, timer, timeFormattingUtility);
     }
@@ -252,7 +252,9 @@ public class GameActivity extends Activity implements ConfigurationLoaderStatusL
             playPauseButton.setVisibility(View.INVISIBLE);
             startEndButton.setText(R.string.game_action_start);
 
-            adapter.notifyDataSetChanged();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
         }
 
         @Override
